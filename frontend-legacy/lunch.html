@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunch Recipes</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px);
+            max-width: 250px;
+            min-width: 200px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lunch Recipes</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+       
+        <div class="slider-container">
+            <span>30</span>
+            <input type="range" id="priceSlider" min="30" max="500" value="30" step="10">
+            <span>500</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">250</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById("priceSlider");
+        const recipeList = document.getElementById("recipeList");
+        const priceDisplay = document.getElementById("priceDisplay");
+    
+        const recipes = [
+    { price: 190, name: "Paneer Butter Masala", image: "https://i.pinimg.com/736x/09/e4/ac/09e4acfe3778136b196f0202b45f49d5.jpg", link: "paneerbuttermasala.html", description: "Paneer cubes cooked in a creamy tomato-based gravy." },
+    { price: 115, name: "Aloo Gobi", image: "https://i.pinimg.com/736x/bc/e6/70/bce6708952226e5cd34ec0976aa8c19d.jpg", link: "aloogobi.html", description: "A dry curry made with potatoes and cauliflower." },
+    { price: 47, name: "Tandoori Roti", image: "https://i.pinimg.com/736x/7e/c8/49/7ec849ddb02f977d0ebc0c1dcdc14581.jpg", link: "tandooriroti.html", description: "Whole wheat flatbread baked in a tandoor oven." },
+    { price: 175, name: "Chicken Biryani", image: "https://i.pinimg.com/736x/6a/cc/f3/6accf3cefbe7f9779d151e3696018990.jpg", link: "chickenbiryani.html", description: "Aromatic rice dish with spiced meat or vegetables." },
+    { price: 107, name: "Dal Tadka", image: "https://i.pinimg.com/736x/2a/8e/57/2a8e57bc82908377e58203bfd9f95e84.jpg", link: "daltadka.html", description: "Yellow lentils cooked with spices and ghee." },
+    { price: 85, name: "Pulao", image: "https://i.pinimg.com/736x/18/c5/8d/18c58d13627917fb60d39d2ce019d6a1.jpg", link: "pulav.html", description: "A simple rice dish flavored with cumin and spices." },
+    { price: 85, name: "Baingan Bharta", image: "https://i.pinimg.com/736x/c7/6a/c6/c76ac66e3d9029a3168aba17e62c9f37.jpg", link: "bainganbharta.html", description: "Smoked eggplant mashed and cooked with onions, tomatoes, and spices." },
+    { price: 90, name: "Vegetable Korma", image: "https://i.pinimg.com/736x/79/c6/f0/79c6f06c0f47a802cbd4307e83c5f65a.jpg", link: "vegetablekorma.html", description: "Mixed vegetables cooked in a creamy, mildly spiced sauce." },
+    { price: 75, name: "Aloo Paratha", image: "https://i.pinimg.com/736x/2d/41/1a/2d411adae281d8e22c70ade705a8f4bd.jpg", link: "alooparatha.html", description: "Stuffed flatbread with spiced mashed potatoes." },
+    { price: 140, name: "Dum Aloo", image: "https://i.pinimg.com/736x/87/bf/d7/87bfd7c4be3f49886e34562cbcc0c7b6.jpg", link: "dumaloo.html", description: "Spicy baby potatoes cooked in a rich gravy." },
+    { price: 210, name: "Matter Paneer", image: "https://i.pinimg.com/736x/b0/0f/8a/b00f8ae3581ad641fd0ad9b54d1d6f24.jpg", link: "matterpaneer.html", description: "Paneer and peas in a rich tomato-based curry." },
+    { price: 105, name: "Gobi Manchurian", image: "https://i.pinimg.com/736x/c1/ae/1a/c1ae1aa133a902845a4ddb441cda2154.jpg", link: "gobimanchuria.html", description: "Crispy cauliflower tossed in a spicy Chinese-style sauce." },
+    { price: 95, name: "Kadhi Pakora", image: "https://i.pinimg.com/736x/e0/66/de/e066de3fc57814997ab455047acfa313.jpg", link: "kadhipakora.html", description: "Deep-fried chickpea fritters in a tangy yogurt gravy." },
+    { price: 74, name: "Chana Masala", image: "https://i.pinimg.com/736x/4c/f6/ea/4cf6eab752882c6b13d0f2ea874171c7.jpg", link: "chanamasala.html", description: "Spicy chickpea curry with onions, tomatoes, and spices." },
+    { price: 120, name: "Shahi Paneer", image: "https://i.pinimg.com/736x/02/6c/1c/026c1c13f2bce15f3c5c2dcedaaff499.jpg", link: "shahipaneer.html", description: "Paneer cooked in a rich, creamy gravy with nuts." },
+    { price: 190, name: "Malai Kofta", image: "https://i.pinimg.com/736x/b0/aa/a4/b0aaa4cdf8103e50e74f675f25207332.jpg", link: "malaikofta.html", description: "Fried vegetable or paneer balls in a rich, creamy tomato gravy." },
+    { price: 60, name: "Kathi Roll", image: "https://i.pinimg.com/736x/9c/17/96/9c179646f90e7c9a75aa45a359776d62.jpg", link: "kathiroll.html", description: "A wrap with spiced vegetables or meat in a paratha." },
+    { price: 62, name: "Palak Chaat", image: "https://i.pinimg.com/736x/6b/dc/aa/6bdcaa93ebd18176e85c7c5bff938734.jpg", link: "palakchaat.html", description: "Crispy spinach leaves topped with yogurt and chutney." },
+    { price: 175, name: "Hyderabadi Dum Biryani", image: "https://i.pinimg.com/736x/6a/cc/f3/6accf3cefbe7f9779d151e3696018990.jpg", link: "chickenbiryani.html", description: "A rich, aromatic rice dish with marinated meat, cooked under pressure." },
+    { price: 30, name: "Aloo Methi", image: "https://i.pinimg.com/736x/2b/b1/3f/2bb13f1076c72e10f23f5d323de0b47e.jpg", link: "aloomethi.html", description: "Potatoes cooked with fenugreek leaves and spices." },
+    { price: 24, name: "Methi Thepla", image: "https://i.pinimg.com/736x/22/36/05/223605c1b7c4e3398cc9bc8c04836329.jpg", link: "methithepla.html", description: "Fenugreek flavored flatbread." },
+    { price: 24, name: "Jeera Rice", image: "https://i.pinimg.com/736x/2c/60/05/2c600582517ee966ce961355f8adf204.jpg", link: "jeerarice.html", description: "Simple basmati rice flavored with cumin seeds." },
+   { price: 101, name: "Chicken Curry", image: "https://i.pinimg.com/736x/8c/23/f3/8c23f3cabfaf3aaf1e18ee27edfde5ab.jpg", link: "chickencurry.html", description: "Chicken cooked in a rich, flavorful gravy with spices." },
+{ price: 83, name: "Mushroom Curry", image: "https://i.pinimg.com/736x/22/39/0b/22390b364cc38e8a360be1ac7b02850d.jpg", link: "mushroomcurry.html", description: "Mushrooms cooked in a flavorful and spicy curry sauce." }
+
+];
+
+
+    
+function renderlunch(lunchArray) {
+        recipeList.innerHTML = "";
+        lunchArray.forEach(lunch => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === lunch.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${lunch.link || "#"}" target="_blank">
+                    <img src="${lunch.image}" alt="${lunch.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${lunch.name}</h3>
+                <p>${lunch.description || ""}</p>
+                <p>₹${lunch.price} ${lunch.favourites ? `| ❤️ ${lunch.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    renderlunch(data);
+                } else {
+                    renderlunch([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        renderlunch(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+</script>
+</body>
+</html>

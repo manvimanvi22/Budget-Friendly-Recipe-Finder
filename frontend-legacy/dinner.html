@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinner</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px);
+            max-width: 250px;
+            min-width: 200px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dinner</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+
+        <div class="slider-container">
+            <span>30</span>
+            <input type="range" id="priceSlider" min="30" max="1000" value="30" step="25">
+            <span>1000</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">30</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+    <script>
+        const slider = document.getElementById("priceSlider");
+        const recipeList = document.getElementById("recipeList");
+        const priceDisplay = document.getElementById("priceDisplay");
+    
+        const recipes = [
+            { price: 47, name: "Tandoori Roti", image: "https://i.pinimg.com/736x/7e/c8/49/7ec849ddb02f977d0ebc0c1dcdc14581.jpg", link: "tandooriroti.html", description: "Soft and crispy Indian flatbread." },
+            { price: 72, name: "Kale and Paneer Pulao", image: "https://sinfullyspicy.com/wp-content/uploads/2021/06/8C30DB33-7887-4B13-8EE4-3FFA07B28939.jpeg", link: "kaleandpaneerpulav.html", description: "A fragrant and easy paneer(indian cheese) and kale pulao" },
+            { price: 31, name: "Sukha Matar Aloo", image: "https://sinfullyspicy.com/wp-content/uploads/2021/08/24D6647E-49FD-4320-B435-1D0DE402A86F-997x1536.jpeg", link: "sukhamataraloo.html", description: " delicious preparation with fresh peas and potatoes" },
+            { price: 48, name: "Mutton Pepper Fry", image: "https://sinfullyspicy.com/wp-content/uploads/2024/09/3-1.jpg", link: "muttonpepperfry.html", description: "hot & spicy with tender pieces of mutton coated in an intensely peppery masala." },
+            { price: 99, name: "Prawn Fried Rice", image: "https://i.pinimg.com/736x/43/59/6f/43596f4a7a5e3c518bcfbc4c68b7848c.jpg", link: "prawnfriedrice.html", description: "Fried rice with prawns." },
+            { price: 108, name: "Shahi Chicken Korma (White Chicken Korma)", image: "https://sinfullyspicy.com/wp-content/uploads/2014/11/4.jpg", link: "shahichickenkorma.html", description: "Tender chicken in a rich, delicately aromatic and creamy sauce makes this white chicken korma fit for royalty! " },
+            { price: 58, name: "Fish Curry", image: "https://i.pinimg.com/736x/3d/d9/bd/3dd9bd8e7749bfa578ea799f115b3480.jpg", link: "fishcurry.html", description: "Tangy and spicy fish curry." },
+            { price: 24, name: "Masoor Dal Khichdi", image: "https://sinfullyspicy.com/wp-content/uploads/2021/11/0BA86078-9A5E-4DE8-B0F9-645D9498C232-1024x1536.jpeg", link: "masoordalkichidi.html", description: "easy indian comfort meal made with rice and lentils." },
+            { price: 54, name: "Veg Korma", image: "https://i.pinimg.com/736x/10/26/d8/1026d8cccb9fa183e315349440ab47e5.jpg", link: "vegkorma.html", description: "Mixed vegetables in rich curry." },
+            { price: 104, name: "Amritsari Fish", image: "https://sinfullyspicy.com/wp-content/uploads/2022/07/1-4.jpg", link: "amritsarifish.html", description: "Fish pakora spicy masala and then deep fried . " },
+            { price: 140, name: "Mushroom Pepper Fry", image: "https://i.pinimg.com/736x/58/91/b7/5891b774917b21a1f0dc9b9ad01a9854.jpg", link: "mushroompepperfry.html", description: "Spicy stir-fry with mushrooms, peppers." },
+            { price: 73, name: "Masala Prawn Curry", image: "https://i.pinimg.com/736x/32/cd/5a/32cd5a30754392e703f3eafbc910b46b.jpg", link: "prawnmasala.html", description: "Spicy prawn curry." },
+            { price: 36, name: "Kalla Chana", image: "https://sinfullyspicy.com/wp-content/uploads/2023/03/1-9.jpg", link: "kallachana.html", description: "black chickpeas (kala chana), ground spices, ginger and green chillies." },
+            { price: 22, name: "Perugu Pachadi", image: "https://i.pinimg.com/736x/b3/01/0f/b3010f2301c449cdb4b7079a302f5f1c.jpg", link: "perugupachadi.html", description: "Creamy yogurt-based spiced vegetable dish." },
+            { price: 67, name: "Kadai Paneer", image: "https://i.pinimg.com/736x/89/65/ae/8965aeef7b5d5e17629dd1edac7f181c.jpg", link: "kadaipaneer.html", description: "Spiced paneer with bell peppers." },
+            { price: 33, name: "Egg Curry", image: "https://i.pinimg.com/736x/fe/d8/8b/fed88b61378bdc716cf284df20b7171a.jpg", link: "eggcurry.html", description: "Eggs in rich tomato gravy." },
+            { price: 29, name: "Aloo Palak", image: "https://sinfullyspicy.com/wp-content/uploads/2022/09/1-2.jpg", link: "aloopalak.html", description: " easy dry indian sabzi made with potatoes and spinach" },
+            { price: 66, name: "Chicken Chettinad", image: "https://sinfullyspicy.com/wp-content/uploads/2023/06/4-1.jpg", link: "chickenchetinad.html", description: "Spicy Chettinad chicken curry." },
+            { price: 140, name: "Dum Aloo", image: "https://sinfullyspicy.com/wp-content/uploads/2024/01/4-3.jpg", link: "dumaloo.html", description: "Potatoes in rich gravy." },
+            
+        ];
+
+    
+        function renderDinners(dinnerArray) {
+        recipeList.innerHTML = "";
+        dinnerArray.forEach(dinner => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === dinner.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${dinner.link || "#"}" target="_blank">
+                    <img src="${dinner.image}" alt="${dinner.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${dinner.name}</h3>
+                <p>${dinner.description || ""}</p>
+                <p>₹${dinner.price} ${dinner.favourites ? `| ❤️ ${dinner.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    renderDinners(data);
+                } else {
+                    renderDinners([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        renderDinners(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+</script>
+    
+
+    
+</body>
+</html>

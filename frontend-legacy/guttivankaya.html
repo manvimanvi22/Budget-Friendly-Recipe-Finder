@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gutti Vankaya Curry Recipe | Budget Friendly Recipe Finder</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        line-height: 1.6;
+    }
+    /* Header */
+    header {
+        background: #000000;
+        color: #ffffff;
+        padding: 20px 0;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    /* Container */
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    /* Recipe Title */
+    .recipe-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .recipe-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .recipe-title p {
+        font-size: 1.2rem;
+        color: #333333;
+    }
+    /* Main Content */
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: space-between;
+    }
+    /* Left Column */
+    .left-column {
+        flex: 1;
+        min-width: 300px;
+    }
+    /* Right Column */
+    .right-column {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+    /* Image Gallery */
+    .image-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .image-gallery img {
+        width: 100%;
+        border-radius: 15px;
+        object-fit: cover;
+        height: auto;
+        max-height: 400px;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .image-gallery img:hover {
+        transform: scale(1.05);
+        filter: brightness(0.9);
+    }
+    /* Interactive Elements */
+    .interactive-section {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #dddddd;
+    }
+    /* Serving Size Adjuster */
+    .serving-size {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .serving-size label {
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+    .serving-size input {
+        width: 60px;
+        padding: 5px;
+        font-size: 1rem;
+        text-align: center;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+    /* Add to Favorites Button */
+    .favorites-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: auto;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .favorites-btn.active {
+        background: #ff0000;
+    }
+    /* Ingredient Checklist */
+    .ingredients {
+        margin-bottom: 30px;
+    }
+    .ingredients h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .ingredient-details {
+        display: flex;
+        align-items: center;
+    }
+    .ingredient-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
+    .ingredient-item label {
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .ingredient-cost {
+        font-size: 1.1rem;
+        color: #555555;
+    }
+    /* Total Cost */
+    .total-cost {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 10px;
+        color: #000000;
+    }
+    /* Instructions */
+    .instructions {
+        margin-top: 30px;
+    }
+    .instructions h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .instruction-step {
+        display: none;
+        background: #f0f0f0;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        font-size: 1.1rem;
+        min-height: 200px;
+    }
+    .instruction-step.active {
+        display: block;
+    }
+    .instruction-step::before {
+        content: attr(data-step);
+        position: absolute;
+        left: -40px;
+        top: 20px;
+        background: #000000;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    /* Step Navigation */
+    .step-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .step-navigation button {
+        background: #000000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+    }
+    .step-navigation button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+    /* Nutritional Info */
+    .nutrition {
+        margin-top: 30px;
+    }
+    .nutrition h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .nutrition ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .nutrition li {
+        background: #f0f0f0;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 1rem;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+    /* Footer */
+    footer {
+        background-color: #000000;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 1.1rem;
+        margin-top: 50px;
+    }
+    footer p {
+        margin-bottom: 10px;
+    }
+    .social-icons a {
+        color: #ffffff;
+        margin: 0 10px;
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+    .social-icons a:hover {
+        color: #999999;
+    }
+    /* Media Queries */
+    @media (max-width: 768px) {
+        main {
+            flex-direction: column;
+        }
+        .step-navigation button {
+            margin: 10px 0;
+        }
+        .instruction-step::before {
+            left: -35px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Budget Friendly Recipe Finder</h1>
+</header>
+
+<div class="container">
+
+    <div class="recipe-title">
+        <h2>Gutti Vankaya Curry</h2>
+        <p>A delicious and flavorful stuffed eggplant curry, a classic South Indian dish.</p>
+    </div>
+
+    <main>
+
+        <div class="left-column">
+
+            <div class="image-gallery">
+                <img src="https://i.pinimg.com/736x/fe/c2/02/fec202c97c363765bfd691f39f2649aa.jpg" alt="Gutti Vankaya Curry">
+            </div>
+
+            <div class="nutrition">
+                <h3>Nutritional Information (Per Serving)</h3>
+                <ul>
+                    <li><strong>Calories:</strong> 350 kcal</li>
+                    <li><strong>Protein:</strong> 8g</li>
+                    <li><strong>Carbs:</strong> 25g</li>
+                    <li><strong>Fat:</strong> 25g</li>
+                    <li><strong>Fiber:</strong> 10g</li>
+                    <li><strong>Iron:</strong> 2mg</li>
+                </ul>
+            </div>
+
+            <div class="why-love">
+                <h3>Why You'll Love This Dish</h3>
+                <ul>
+                    <li> <strong>Flavorful & Aromatic:</strong> Rich and tangy with a blend of spices.</li>
+                    <li> <strong>Unique Texture:</strong> Tender eggplant with a savory stuffing.</li>
+                    <li> <strong>Budget-Friendly:</strong> Eggplant is often an affordable vegetable.</li>
+                    <li> <strong>Versatile:</strong> Great with rice or roti.</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="right-column">
+            <div class="interactive-section">
+
+                <button class="favorites-btn" id="favorites-btn"><i class="fas fa-heart"></i> Add to Favorites</button>
+
+                <div class="serving-size">
+                    <label for="servings">Servings:</label>
+                    <input type="number" id="servings" value="1" min="1" max="10">
+                </div>
+
+                <div class="ingredients">
+                    <h3>Ingredients</h3>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient1">
+                            <label for="ingredient1">4 small eggplants (brinjals)</label>
+                        </div>
+                        <span class="ingredient-cost">₹15</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient2">
+                            <label for="ingredient2">1 medium onion, finely chopped</label>
+                        </div>
+                        <span class="ingredient-cost">₹5</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient3">
+                            <label for="ingredient3">1 tomato, finely chopped</label>
+                        </div>
+                        <span class="ingredient-cost">₹5</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient4">
+                            <label for="ingredient4">1 tbsp ginger-garlic paste</label>
+                        </div>
+                        <span class="ingredient-cost">₹3</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient5">
+                            <label for="ingredient5">1/2 tsp turmeric powder</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient6">
+                            <label for="ingredient6">1 tsp red chili powder (adjust to taste)</label>
+                        </div>
+                        <span class="ingredient-cost">₹2</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient7">
+                            <label for="ingredient7">1 tbsp coriander powder</label>
+                        </div>
+                        <span class="ingredient-cost">₹2</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient8">
+                            <label for="ingredient8">1/2 tsp cumin powder</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient9">
+                            <label for="ingredient9">1/2 tsp mustard seeds</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient10">
+                            <label for="ingredient10">1/4 tsp fenugreek seeds (methi seeds)</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient11">
+                            <label for="ingredient11">2 tbsp roasted peanut powder</label>
+                        </div>
+                        <span class="ingredient-cost">₹5</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient12">
+                            <label for="ingredient12">1 tbsp tamarind pulp</label>
+                        </div>
+                        <span class="ingredient-cost">₹3</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient13">
+                            <label for="ingredient13">2 tbsp cooking oil</label>
+                        </div>
+                        <span class="ingredient-cost">₹4</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient14">
+                            <label for="ingredient14">Salt to taste</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="total-cost">Total: ₹50</div>
+                </div>
+
+                <div class="instructions">
+                    <h3>Instructions</h3>
+                    <div class="instruction-step active" data-step="1">
+                        Wash the eggplants and make two slits in each, forming an 'X' shape, without cutting through the stem.
+                    </div>
+                    <div class="instruction-step" data-step="2">
+                        **For the stuffing:** In a small bowl, mix together roasted peanut powder, turmeric powder, red chili powder, coriander powder, cumin powder, tamarind pulp, and salt. Add a little water if needed to make a thick paste.
+                    </div>
+                    <div class="instruction-step" data-step="3">
+                        Stuff each eggplant with the prepared stuffing mixture, gently pushing it into the slits.
+                    </div>
+                    <div class="instruction-step" data-step="4">
+                        Heat oil in a pot or pan over medium heat. Add mustard seeds and fenugreek seeds. Let them splutter.
+                    </div>
+                    <div class="instruction-step" data-step="5">
+                        Add finely chopped onions and sauté until golden brown.
+                    </div>
+                    <div class="instruction-step" data-step="6">
+                        Add ginger-garlic paste and sauté for a minute until fragrant.
+                    </div>
+                    <div class="instruction-step" data-step="7">
+                        Stir in finely chopped tomatoes and cook until they soften and the oil starts to separate.
+                    </div>
+                    <div class="instruction-step" data-step="8">
+                        Gently place the stuffed eggplants in the pot. Add any leftover stuffing mixture.
+                    </div>
+                    <div class="instruction-step" data-step="9">
+                        Add about 1/2 cup of water (or more, depending on the desired gravy consistency). Bring to a simmer, cover the pot, and cook on low heat for 15-20 minutes, or until the eggplants are tender.
+                    </div>
+                    <div class="instruction-step" data-step="10">
+                        Stir occasionally to prevent sticking. If the gravy is too thick, add a little more water. Adjust salt to taste.
+                    </div>
+                    <div class="instruction-step" data-step="11">
+                        Garnish with fresh coriander leaves (optional) and serve hot with rice or roti.
+                    </div>
+
+                    <div class="step-navigation">
+                        <button id="prev-step" disabled>Previous</button>
+                        <button id="next-step">Next</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Budget Friendly Recipe Finder</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <script>
+    const favoritesBtn = document.getElementById('favorites-btn');
+    favoritesBtn.addEventListener('click', () => {
+        favoritesBtn.classList.toggle('active');
+        favoritesBtn.textContent = favoritesBtn.classList.contains('active') ? 'Added to Favorites' : 'Add to Favorites';
+    });
+
+    const servingsInput = document.getElementById('servings');
+    servingsInput.addEventListener('input', (e) => {
+        const servings = parseInt(e.target.value);
+        const baseCost = 50; // Base cost for 1 serving (assuming 4 small eggplants is one serving)
+        const cost = servings * baseCost;
+        document.querySelector('.total-cost').textContent = `Total: ₹${cost.toFixed(0)}`;
+    });
+
+    const steps = document.querySelectorAll('.instruction-step');
+    const prevBtn = document.getElementById('prev-step');
+    const nextBtn = document.getElementById('next-step');
+    let currentStep = 0;
+
+    prevBtn.disabled = currentStep === 0;
+    nextBtn.disabled = currentStep === steps.length - 1;
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            steps[currentStep].classList.remove('active');
+            currentStep++;
+            steps[currentStep].classList.add('active');
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === steps.length - 1;
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            steps[currentStep].classList.remove('active');
+            currentStep--;
+            steps[currentStep].classList.add('active');
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === steps.length - 1;
+        }
+    });
+    </script>
+</body>
+</html>

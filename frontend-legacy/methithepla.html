@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methi Thepla Recipe | Budget Friendly Recipe Finder</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        line-height: 1.6;
+    }
+    /* Header */
+    header {
+        background: #000000;
+        color: #ffffff;
+        padding: 20px 0;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    /* Container */
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    /* Recipe Title */
+    .recipe-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .recipe-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .recipe-title p {
+        font-size: 1.2rem;
+        color: #333333;
+    }
+    /* Main Content */
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: space-between;
+    }
+    /* Left Column */
+    .left-column {
+        flex: 1;
+        min-width: 300px;
+    }
+    /* Right Column */
+    .right-column {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+    /* Image Gallery */
+    .image-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .image-gallery img {
+        width: 100%;
+        border-radius: 15px;
+        object-fit: cover;
+        height: auto;
+        max-height: 400px;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .image-gallery img:hover {
+        transform: scale(1.05);
+        filter: brightness(0.9);
+    }
+    /* Interactive Elements */
+    .interactive-section {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #dddddd;
+    }
+    /* Serving Size Adjuster */
+    .serving-size {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .serving-size label {
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+    .serving-size input {
+        width: 60px;
+        padding: 5px;
+        font-size: 1rem;
+        text-align: center;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+    /* Add to Favorites Button */
+    .favorites-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: auto;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .favorites-btn.active {
+        background: #ff0000;
+    }
+    /* Ingredient Checklist */
+    .ingredients {
+        margin-bottom: 30px;
+    }
+    .ingredients h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .ingredient-details {
+        display: flex;
+        align-items: center;
+    }
+    .ingredient-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
+    .ingredient-item label {
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .ingredient-cost {
+        font-size: 1.1rem;
+        color: #555555;
+    }
+    /* Total Cost */
+    .total-cost {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 10px;
+        color: #000000;
+    }
+    /* Instructions */
+    .instructions {
+        margin-top: 30px;
+    }
+    .instructions h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .instruction-step {
+        display: none;
+        background: #f0f0f0;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        font-size: 1.1rem;
+        min-height: 200px;
+    }
+    .instruction-step.active {
+        display: block;
+    }
+    .instruction-step::before {
+        content: attr(data-step);
+        position: absolute;
+        left: -40px;
+        top: 20px;
+        background: #000000;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    /* Step Navigation */
+    .step-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .step-navigation button {
+        background: #000000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+    }
+    .step-navigation button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+    /* Nutritional Info */
+    .nutrition {
+        margin-top: 30px;
+    }
+    .nutrition h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .nutrition ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .nutrition li {
+        background: #f0f0f0;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 1rem;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+    /* Why Love Section */
+    .why-love {
+        margin-top: 30px;
+    }
+    .why-love h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .why-love ul {
+        list-style-type: none;
+    }
+    .why-love li {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+    /* Footer */
+    footer {
+        background-color: #000000;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 1.1rem;
+        margin-top: 50px;
+    }
+    footer p {
+        margin-bottom: 10px;
+    }
+    .social-icons a {
+        color: #ffffff;
+        margin: 0 10px;
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+    .social-icons a:hover {
+        color: #999999;
+    }
+    /* Media Queries */
+    @media (max-width: 768px) {
+        main {
+            flex-direction: column;
+        }
+        .step-navigation button {
+            margin: 10px 0;
+        }
+        .instruction-step::before {
+            left: -35px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Budget Friendly Recipe Finder</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="recipe-title">
+            <h2>Methi Thepla</h2>
+            <p>A soft and flavorful flatbread made with whole wheat flour, fenugreek leaves, and spices, popular in Gujarati cuisine.</p>
+        </div>
+
+        <main>
+
+            <div class="left-column">
+
+                <div class="image-gallery">
+                    <img src="https://i.pinimg.com/736x/6d/a9/d4/6da9d45cc867bcb3a1037126d751cb4f.jpg" alt="Methi Thepla">
+                    <img src="https://i.pinimg.com/736x/22/36/05/223605c1b7c4e3398cc9bc8c04836329.jpg" alt="Methi Thepla served">
+                </div>
+
+                <div class="nutrition">
+                    <h3>Nutritional Information (Per Thepla)</h3>
+                    <ul>
+                        <li><strong>Calories:</strong> 120 kcal</li>
+                        <li><strong>Protein:</strong> 3g</li>
+                        <li><strong>Carbs:</strong> 18g</li>
+                        <li><strong>Fat:</strong> 4g</li>
+                        <li><strong>Fiber:</strong> 3g</li>
+                        <li><strong>Iron:</strong> 1mg</li>
+                    </ul>
+                </div>
+
+                <div class="why-love">
+                    <h3>Why You'll Love This Dish</h3>
+                    <ul>
+                        <li>🌿 <strong>Healthy & Wholesome:</strong> Made with whole wheat flour and nutritious methi.</li>
+                        <li>😋 <strong>Flavorful & Aromatic:</strong> The spices and methi create a unique taste.</li>
+                        <li>⏱️ <strong>Quick & Easy:</strong> Simple to prepare and cook.</li>
+                        <li> سفر <strong>Travel-Friendly:</strong> Stays soft for a long time, making it great for travel.</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="right-column">
+                <div class="interactive-section">
+
+                    <button class="favorites-btn" id="favorites-btn"><i class="fas fa-heart"></i> Add to Favorites</button>
+
+                    <div class="serving-size">
+                        <label for="servings">Servings (Theplas):</label>
+                        <input type="number" id="servings" value="4" min="1" max="10">
+                    </div>
+
+                    <div class="ingredients">
+                        <h3>Ingredients (For 4 Theplas)</h3>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient1">
+                                <label for="thepla-ingredient1">1 cup whole wheat flour (atta)</label>
+                            </div>
+                            <span class="ingredient-cost">₹8</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient2">
+                                <label for="thepla-ingredient2">1/2 cup fresh methi (fenugreek) leaves, finely chopped</label>
+                            </div>
+                            <span class="ingredient-cost">₹5</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient3">
+                                <label for="thepla-ingredient3">1 teaspoon ginger-green chili paste</label>
+                            </div>
+                            <span class="ingredient-cost">₹2</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient4">
+                                <label for="thepla-ingredient4">1/2 teaspoon turmeric powder</label>
+                            </div>
+                            <span class="ingredient-cost">₹1</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient5">
+                                <label for="thepla-ingredient5">1/2 teaspoon red chili powder (optional)</label>
+                            </div>
+                            <span class="ingredient-cost">₹1</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient6">
+                                <label for="thepla-ingredient6">1/2 teaspoon cumin powder</label>
+                            </div>
+                            <span class="ingredient-cost">₹1</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient7">
+                                <label for="thepla-ingredient7">1 tablespoon yogurt (dahi)</label>
+                            </div>
+                            <span class="ingredient-cost">₹3</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient8">
+                                <label for="thepla-ingredient8">1 tablespoon oil</label>
+                            </div>
+                            <span class="ingredient-cost">₹2</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient9">
+                                <label for="thepla-ingredient9">Salt to taste</label>
+                            </div>
+                            <span class="ingredient-cost">₹1</span>
+                        </div>
+                        <div class="ingredient-item">
+                            <div class="ingredient-details">
+                                <input type="checkbox" id="thepla-ingredient10">
+                                <label for="thepla-ingredient10">Water, as needed for dough</label>
+                            </div>
+                            <span class="ingredient-cost">₹0</span>
+                        </div>
+                        <div class="total-cost">Total: ₹24</div>
+                    </div>
+
+                    <div class="instructions">
+                        <h3>Instructions</h3>
+                        <div class="instruction-step active" data-step="1">
+                            In a large bowl, combine the whole wheat flour, chopped methi leaves, ginger-green chili paste, turmeric powder, red chili powder (if using), cumin powder, yogurt, oil, and salt.
+                        </div>
+                        <div class="instruction-step" data-step="2">
+                            Mix all the ingredients well. Gradually add water and knead to form asmooth and soft dough.
+                        </div>
+                        <div class="instruction-step" data-step="3">
+                            Cover the dough and let it rest for at least 15-20 minutes.
+                        </div>
+                        <div class="instruction-step" data-step="4">
+                            Divide the dough into small, equal-sized balls (approximately 4 for this recipe).
+                        </div>
+                        <div class="instruction-step" data-step="5">
+                            Take one dough ball and roll it out into a thin circular flatbread (thepla) using a rolling pin and a little dry flour if needed. It should be about 6-7 inches in diameter.
+                        </div>
+                        <div class="instruction-step" data-step="6">
+                            Heat a flat griddle or tawa over medium heat. Place the rolled thepla on the hot tawa.
+                        </div>
+                        <div class="instruction-step" data-step="7">
+                            Cook for a few seconds on one side until small bubbles appear. Flip it over and cook the other side similarly.
+                        </div>
+                        <div class="instruction-step" data-step="8">
+                            Apply a little oil or ghee on both sides of the thepla and cook until golden brown spots appear and the thepla is cooked through and slightly crisp. Press gently with a spatula to ensure even cooking.
+                        </div>
+                        <div class="instruction-step" data-step="9">
+                            Repeat the process with the remaining dough balls.
+                        </div>
+                        <div class="instruction-step" data-step="10">
+                            Serve the methi theplas hot with yogurt, pickle, or any sabzi (vegetable dish) of your choice. They are also great for breakfast, snacks, or as a travel food.
+                        </div>
+
+                        <div class="step-navigation">
+                            <button id="prev-step" disabled>Previous</button>
+                            <button id="next-step">Next</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Budget Friendly Recipe Finder</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </footer>
+
+        <script>
+        const favoritesBtn = document.getElementById('favorites-btn');
+        favoritesBtn.addEventListener('click', () => {
+            favoritesBtn.classList.toggle('active');
+            favoritesBtn.textContent = favoritesBtn.classList.contains('active') ? 'Added to Favorites' : 'Add to Favorites';
+        });
+
+        const servingsInput = document.getElementById('servings');
+        const initialServings = parseInt(servingsInput.value);
+        const baseCost = 24 / 4; // Base cost for 1 thepla
+
+        function updateCost() {
+            const servings = parseInt(servingsInput.value);
+            const cost = servings * baseCost;
+            document.querySelector('.total-cost').textContent = `Total: ₹${cost.toFixed(0)}`;
+        }
+
+        servingsInput.addEventListener('input', updateCost);
+        updateCost(); // Initialize cost on load
+
+        const steps = document.querySelectorAll('.instruction-step');
+        const prevBtn = document.getElementById('prev-step');
+        const nextBtn = document.getElementById('next-step');
+        let currentStep = 0;
+
+        prevBtn.disabled = currentStep === 0;
+        nextBtn.disabled = currentStep === steps.length - 1;
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                steps[currentStep].classList.remove('active');
+                currentStep++;
+                steps[currentStep].classList.add('active');
+                prevBtn.disabled = currentStep === 0;
+                nextBtn.disabled = currentStep === steps.length - 1;
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                steps[currentStep].classList.remove('active');
+                currentStep--;
+                steps[currentStep].classList.add('active');
+                prevBtn.disabled = currentStep === 0;
+                nextBtn.disabled = currentStep === steps.length - 1;
+            }
+        });
+        </script>
+    </body>
+    </html>

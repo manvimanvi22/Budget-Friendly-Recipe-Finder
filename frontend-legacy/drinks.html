@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drink Recipes</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px);
+            max-width: 250px;
+            min-width: 200px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Drink Recipes</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+       
+        <div class="slider-container">
+            <span>10</span>
+            <input type="range" id="priceSlider" min="10" max="300" value="10" step="10">
+            <span>300</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">10</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById("priceSlider");
+        const priceDisplay = document.getElementById("priceDisplay");
+        const recipeList = document.getElementById("recipeList");
+
+        const recipes= [
+            { price: 9, name: "Lemonade", image: "https://i.pinimg.com/736x/99/2b/a6/992ba606907bad9f112faf07ee13551b.jpg", link: "lemonade.html", description: "A refreshing drink made with lemon juice, sugar, and water." },
+            { price: 18, name: "Iced Coffee", image: "https://i.pinimg.com/736x/a8/75/bd/a875bd2ef9ed3b4bd08b0120750ea915.jpg", link: "icedcofee.html", description: "Chilled coffee served with ice and milk." },
+            { price: 39, name: "Mint Mojito", image: "https://i.pinimg.com/736x/cd/f1/0b/cdf10bd45a14c646c05e75cc59390b21.jpg", link: "mintmojito.html", description: "A cool drink made with mint leaves, lime, and soda water." },
+            { price: 51, name: "Milkshake", image: "https://i.pinimg.com/736x/63/1c/a2/631ca213b0a2d18bf85b5695c9ce54cf.jpg", link: "milkshake.html", description: "A creamy drink made with milk, ice cream, and flavorings." },
+            { price: 25, name: "Fruit Smoothie", image: "https://i.pinimg.com/736x/4e/c4/8e/4ec48e33267c97cfdb5c0a631bb00831.jpg", link: "fruitsmothie.html", description: "A healthy drink made with blended fruits and yogurt." },
+            { price: 58, name: "Hot Chocolate", image: "https://i.pinimg.com/736x/fb/80/bf/fb80bfc162132f8bc17c71a7f14abcab.jpg", link: "hotchocolate.html", description: "A warm, comforting drink made with milk, cocoa powder, and sugar." },
+            { price: 10, name: "Green Tea", image: "https://i.pinimg.com/736x/47/27/eb/4727eb25d368e75b55cf0c7957db76bc.jpg", link: "greentea.html", description: "A healthy, soothing tea made from green tea leaves." },
+            { price: 18, name: "Fruit Punch", image: "https://i.pinimg.com/736x/f9/d8/a0/f9d8a0b96bd9a5b871702b0c45509d85.jpg", link: "friutpunch.html", description: "A refreshing drink made with mixed fruits and juice." },
+            { price: 14, name: "Cold Brew Coffee", image: "https://i.pinimg.com/736x/18/da/2f/18da2fad7461d22ec47f3a8d7da6e7b3.jpg", link: "coldbrewcofee.html", description: "A strong, chilled coffee drink made by steeping coffee grounds in cold water." },
+            { price: 14, name: "Chai Latte", image: "https://i.pinimg.com/736x/1c/df/36/1cdf3611722765dd43ab3efd80aa61b6.jpg", link: "chailatte.html", description: "Spiced tea mixed with steamed milk." },
+            { price: 15, name: "Peach Iced Tea", image: "https://i.pinimg.com/736x/d4/cf/e1/d4cfe1907c65b0ba5972e7acf25cc8fc.jpg", link: "peachicedtea.html", description: "Iced tea flavored with sweetened peach syrup." },
+            { price: 43, name: "Lassi", image: "https://i.pinimg.com/736x/65/52/54/655254439134e79468defbd85a4acfeb.jpg", link: "lassi.html", description: "A traditional yogurt-based drink, either sweet or salted." },
+            { price: 26, name: "Orange Juice", image: "https://i.pinimg.com/736x/27/d1/d9/27d1d96f78a215b0e2a0606be343c6eb.jpg", link: "orange.html", description: "Freshly squeezed juice made from oranges." },
+            { price: 16, name: "Ginger Lemon Tea", image: "https://i.pinimg.com/736x/25/87/ad/2587ad887f485060ced6fa8f902581b1.jpg", link: "gingerlemontea.html", description: "A soothing blend of ginger and lemon in hot water." },
+            { price: 12, name: "Hot Lemon Honey", image: "https://i.pinimg.com/736x/ac/5e/f1/ac5ef16e48b4b707cfaa151f6a63d5f2.jpg", link: "hotlemonhoney.html", description: "A warm drink made with lemon and honey." },
+            { price: 62, name: "Strawberry Smoothie", image: "https://i.pinimg.com/736x/94/2b/03/942b0316b3cb91cc5c5f2ec0c47a53cb.jpg", link: "strawberrysmothie.html", description: "A fruity drink made with fresh strawberries and yogurt." },
+            { price: 33, name: "Bubble Tea", image: "https://i.pinimg.com/736x/4e/a7/ef/4ea7ef3c932dcabdca8fcee2898e9832.jpg", link: "bubbletea.html", description: "A tea-based drink with chewy tapioca pearls." },
+            { price: 25, name: "Hot Apple Cider", image: "https://i.pinimg.com/736x/bd/8f/07/bd8f073818d28d5a00dd5d91169db0fa.jpg", link: "hotapplecider.html", description: "A warming drink made from fresh apple juice and spices." },
+            { price: 10, name: "Cucumber Mint Cooler", image: "https://i.pinimg.com/736x/00/c8/66/00c866f5478b1497b5952884cad6b584.jpg", link: "cucumbermintcooler.html", description: "A refreshing drink made with cucumber, mint, and lime." },
+            {price: 35, name: "Coffee Latte", image: "https://i.pinimg.com/736x/6a/86/c3/6a86c387495a30851e5843a582c7b6f2.jpg", link: "cofeelatte.html", description: "A refreshing coffee with milk." }
+        ];
+
+        function renderdrinks(drinksArray) {
+        recipeList.innerHTML = "";
+        drinksArray.forEach(drinks => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === drinks.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${drinks.link || "#"}" target="_blank">
+                    <img src="${drinks.image}" alt="${drinks.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${drinks.name}</h3>
+                <p>${drinks.description || ""}</p>
+                <p>₹${drinks.price} ${drinks.favourites ? `| ❤️ ${drinks.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    renderdrinks(data);
+                } else {
+                    renderdrinks([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        renderdrinks(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+</script>
+</script>
+</body>
+</html>

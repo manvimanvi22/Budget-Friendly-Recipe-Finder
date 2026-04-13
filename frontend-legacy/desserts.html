@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desserts</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px);
+            max-width: 250px;
+            min-width: 200px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Desserts</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+
+        <div class="slider-container">
+            <span>75</span>
+            <input type="range" id="priceSlider" min="75" max="1000" value="75" step="10">
+            <span>1000</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">75</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById("priceSlider");
+        const priceDisplay = document.getElementById("priceDisplay");
+        const recipeList = document.getElementById("recipeList");
+
+        const recipes= [
+            { price: 40, name: "Gulab Jamun", image: "https://sinfullyspicy.com/wp-content/uploads/2011/07/2-1.jpg", link: "Gulabjamun.html", description: "Fried dough balls soaked in sweet syrup." },
+            { price: 90, name: "Rasgulla", image: "https://i.pinimg.com/736x/84/f9/39/84f93947ff80e7af6ee503998c323433.jpg", link: "rasgulla.html", description: "Soft and spongy Bengali dessert made of chhena and semolina." },
+            { price: 67, name: "Kulfi", image: "https://i.pinimg.com/736x/4a/ce/46/4ace460a48ea15118d82cb8572175188.jpg", link: "kulfi.html", description: "Rich, creamy, and frozen Indian ice cream." },
+            { price: 360, name: "Brownie Trifle", image: "https://sinfullyspicy.com/wp-content/uploads/2022/12/1-4.jpg", link: "Brownietriffle.html", description: "scented brownies, eggless vanilla custard (pudding), fresh orange slices, tutti fruits bits & orange zest whipped cream- each bite is chocolatey, citrusy & creamy!" },
+            { price: 60, name: "Black Forest Trifle", image: "https://sinfullyspicy.com/wp-content/uploads/2021/02/3-2.jpg", link: "blackforesttriffle.html", description: "Layers of chocolate cake, fresh cherry pie filling, luscious chocolate pudding & vanilla whipped cream" },
+            { price: 52, name: "Lychee Ice Cream",image:"https://sinfullyspicy.com/wp-content/uploads/2023/07/2-3.jpg",link: "lyceeicecream.html", description: "Lychee ice cream with rose is a delightful frozen dessert offering a fusion of floral & fruity tropical flavors" },
+            { price: 17, name: "Eggless Masala Chai Cake", image: "https://sinfullyspicy.com/wp-content/uploads/2024/11/3-2.jpg", link: "chaicake.html", description: "moist, pleasantly tender, and full of chai spices and real brewed chai (tea) in the batter" },
+            { price: 50, name: "Mango Cheesecake", image: "https://sinfullyspicy.com/wp-content/uploads/2023/07/4.jpg", link: "mangocheesecake.html", description: " creaminess of a classic cheesecake with the tropical flavor of mango" },
+            { price: 15, name: "Spiced Honey Cake", image: "https://sinfullyspicy.com/wp-content/uploads/2020/11/img_1900.jpg?w=735", link: "spicedhoneycake.html", description: "100% sweetened with honey and wafting an aroma of warm woody spices like cinnamon and cloves" },
+            { price: 68, name: "Lemon Tiramisu", image: "https://sinfullyspicy.com/wp-content/uploads/2023/03/1-8.jpg", link: "lemontiramisu.html", description: "quick make-ahead dessert with ladyfinger cookies, mascarpone cheese & heavy cream mixture " },
+            { price: 35, name: "Mango Shrikhanda", image: "https://i.pinimg.com/736x/b2/b5/95/b2b595bd59fdabfe6ea9c989909b2d72.jpg", link: "mangoshirkanda.html", description: "easy, make-ahead indian mango dessert made with a handful of ingredients" },
+            { price: 275, name: "Chocolate Tresleches", image: "https://i.pinimg.com/736x/f1/f8/ec/f1f8ec2653269d18d437e80cd2e39b67.jpg", link: "chocolatetresleches.html", description: "Chocolate tres leches: creamy, moist, decadent dessert." },
+            { price: 20, name: "Brownie  Cheesecake Bites", image: "https://sinfullyspicy.com/wp-content/uploads/2021/02/BA4270E4-D90B-4CE8-BC92-2073E4DFE5DA.jpeg", link: "browniebottomsaffronbites.html", description: "A cream, slightly tangy cheesecake batter atop fudgy brownie layer " },
+            { price: 36, name: "Cashew Icecream", image: "https://sinfullyspicy.com/wp-content/uploads/2015/08/1.jpg", link: "nochrunchcashewicecream.html", description: "A sweet combination of gulab jamun and pistachio." },
+            { price: 21, name: "Sabudana Kheer", image: "https://sinfullyspicy.com/wp-content/uploads/2014/01/1.jpg", link: "sabudhanakheer.html", description: "Rich rice pudding flavored with saffron." },
+            { price: 8, name: "Coconut Burfi", image: "https://sinfullyspicy.com/wp-content/uploads/2012/11/img_05001.jpg", link: "coconutburfi.html", description: "Coconut burfi: sweet, chewy, coconut fudge." },
+            { price: 130, name: "Chocolate Burfi", image: "https://sinfullyspicy.com/wp-content/uploads/2023/08/1-7.jpg", link: "chocoburfi.html", description: "bursting with the flavor of milk chocolate chips, milk powder, cashews ." },
+            { price: 110, name: "Fried Ice Cream", image: "https://i.pinimg.com/736x/1d/61/1c/1d611cb1f055bb52dec4a8915043580f.jpg", link: "Friedicecream.html", description: "Ice cream covered with a crunchy crust and fried." },
+            { price: 23, name: "Fruit Tart", image: "https://i.pinimg.com/736x/82/8a/15/828a1552690e6cf0931e6798497a7945.jpg", link: "fruittart.html", description: "Sweet, creamy, fruity, flaky, delicious." },
+            { price: 52, name: "Cheese Ice Cream with Roasted Strawberries", image: "https://sinfullyspicy.com/wp-content/uploads/2012/07/img_03431.jpg", link: "cheeseicecreamstrawberriesroasted.html", description: "Creamy, tangy, sweet, nutty, indulgent delight." },
+            { price: 77, name: "Black Forest Cake", image: "https://i.pinimg.com/736x/79/cf/45/79cf457ee67301ca1afb522214d693f8.jpg", link: "blackforestcake.html", description: "Chocolate cake with cherries and whipped cream." },
+            { price: 80, name: "Carrot Ladoo", image: "https://sinfullyspicy.com/wp-content/uploads/2021/09/3-3.jpg", link: "carrotladoo.html", description: "soft and melt in the mouth ladoos made with shredded carrots" },
+            { price: 51, name: "Pistachio Cream Roll", image: "https://sinfullyspicy.com/wp-content/uploads/2023/08/2-6.jpg", link: "pistacreamroll.html", description: "Buttery, flaky pastry with a cream filling that tastes like mithai" }
+        ];
+
+        function renderdesserts(dessertsArray) {
+        recipeList.innerHTML = "";
+        dessertsArray.forEach(desserts => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === desserts.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${desserts.link || "#"}" target="_blank">
+                    <img src="${desserts.image}" alt="${desserts.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${desserts.name}</h3>
+                <p>${desserts.description || ""}</p>
+                <p>₹${desserts.price} ${desserts.favourites ? `| ❤️ ${desserts.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    renderdesserts(data);
+                } else {
+                    renderdesserts([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        renderdesserts(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+    </script>
+    
+
+</body>
+</html>
+

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snack Recipes</title>
+<style>
+body {
+font-family: 'Playfair Display', serif;
+margin: 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
+min-height: 100vh;
+}
+h1 {
+text-align: center;
+color: black;
+font-size: 70px;
+margin-bottom: 20px;
+}
+.scroll-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 90%;
+max-width: 1200px;
+}
+.price-range {
+font-size: 20px;
+margin: 10px 0;
+color: #555;
+}
+.slider-container {
+width: 100%;
+margin: 20px 0;
+position: relative;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+input[type="range"] {
+width: 80%;
+appearance: none;
+height: 6px;
+background: #ddd;
+border-radius: 4px;
+transition: background 0.2s ease;
+}
+input[type="range"]::-webkit-slider-thumb {
+appearance: none;
+width: 16px;
+height: 16px;
+border-radius: 50%;
+background: white;
+border: 4px solid black;
+cursor: pointer;
+}
+.price-value {
+font-size: 20px;
+color: #555;
+margin-top: 10px;
+}
+.recipe-list {
+margin-top: 20px;
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+justify-content: center;
+width: 100%;
+}
+.recipe-item {
+flex: 1 1 calc(25% - 20px);
+max-width: 250px;
+min-width: 200px;
+background: #f4f4f4;
+border-radius: 5px;
+text-align: center;
+padding: 10px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.recipe-item img {
+width: 250px;
+height: 250px;
+object-fit: cover;
+border-radius: 5px;
+}
+.recipe-item p {
+margin: 10px 0 0;
+color: #666;
+font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<h1>Snack Recipes</h1>
+
+<div class="scroll-container">
+<div class="price-range">Price Range:</div>
+<div class="slider-container">
+<span>50</span>
+<input type="range" id="priceSlider" min="50" max="300" value="50" step="10">
+<span>300</span>
+</div>
+
+<div class="price-value">
+Selected Price: <span id="priceDisplay">50</span> Rupees
+</div>
+
+<div class="recipe-list" id="recipeList">
+<!-- Recipes will appear here -->
+</div>
+</div>
+
+<script>
+const slider = document.getElementById("priceSlider");
+const priceDisplay = document.getElementById("priceDisplay");
+const recipeList = document.getElementById("recipeList");
+
+const recipes= [
+{ price: 70, name: "Samosa", image: "https://i.pinimg.com/736x/e7/ad/34/e7ad343c1060bad6359f1eab5ce42bb5.jpg", link: "Samosa.html", description: "Crispy triangular pastries filled with spiced potatoes and peas." },
+{ price: 85, name: "Pani Puri", image: "https://i.pinimg.com/736x/a4/22/03/a42203eb9c602a76fb112463a9e89494.jpg", link: "Panipuri.html", description: "Crispy puris filled with spicy tamarind water, chickpeas, and potatoes." },
+{ price: 49, name: "Chaat", image: "https://i.pinimg.com/736x/44/0a/0c/440a0c32fbb56ac8c3a483b9d1530305.jpg", link: "chaat.html", description: "A flavorful combination of yogurt, chutneys, and crispy ingredients." },
+{ price: 13, name: "Aloo Tikki", image: "https://i.pinimg.com/736x/1b/ca/cc/1bcacc7c90efdc56a2eb5189845b6c86.jpg", link: "alootikki.html", description: "Crispy potato patties served with chutneys and spices." },
+{ price: 84, name: "Pav Bhaji", image: "https://i.pinimg.com/736x/bd/03/1b/bd031b26343b8c2cc6f035d68f8d90ab.jpg", link: "PhavBhaji.html", description: "Spicy mashed vegetables served with buttered bread rolls." },
+{ price: 83, name: "Paneer Tikka", image: "https://i.pinimg.com/736x/49/e5/80/49e5800ada1c3a59021e2c84bf91c457.jpg", link: "Paneer_Tikka.html", description: "Grilled cubes of spiced paneer served with chutney." },
+{ price: 43, name: "Spring Rolls", image: "https://i.pinimg.com/736x/74/55/86/7455861056a201b44b68a5ef65e36583.jpg", link: "vegspringrolls.html", description: "Crispy rolls filled with veggies and served with dipping sauce." },
+{ price: 120, name: "Pakora", image: "https://i.pinimg.com/736x/79/e9/2b/79e92b57fc8e7b673988dd13d8e6b54f.jpg", link: "Pakora.html", description: "Fried fritters made from gram flour and a variety of vegetables." },
+{ price: 70, name: "Vada Pav", image: "https://i.pinimg.com/736x/70/6d/0d/706d0d22aa860b5e5ea12f71e0684a05.jpg", link: "Vadapav.html", description: "Spicy potato fritter served in a bun with chutneys." },
+{ price: 34, name: "Bhel Puri", image: "https://i.pinimg.com/736x/43/73/4b/43734bc7edd29db24a720f63611a3cf1.jpg", link: "Bhel_puri.html", description: "Puffed rice mixed with vegetables, chutneys, and sev." },
+{ price: 41, name: "Dhokla", image: "https://i.pinimg.com/736x/1d/98/cf/1d98cf0172a7d959392b3a78635b9802.jpg", link: "Dhokla.html", description: "Steamed savory cake made from fermented rice and chickpea flour." },
+{ price: 44, name: "Crispy Corn", image: "https://i.pinimg.com/736x/f4/9d/97/f49d97cb1fd022c9914d12d2f973ac13.jpg", link: "Crispycorn.html", description: "Crispy fried corn kernels served with spices." },
+{ price: 71, name: "Cheese Balls", image: "https://i.pinimg.com/736x/4e/3c/b2/4e3cb285a24bcff0ba0abc5bd6db7fd8.jpg", link: "Cheese_balls.html", description: "Deep-fried cheese-filled balls served with ketchup." },
+{ price: 60, name: "Onion Rings", image: "https://i.pinimg.com/736x/15/90/0a/15900ab69fc1b36776dbb853e20f7980.jpg", link: "Onion_rings.html", description: "Crispy fried rings of onion served with a dipping sauce." },
+{ price: 80, name: "French Fries", image: "https://i.pinimg.com/736x/67/51/4d/67514d8b588b60f281d479f0391a6706.jpg", link: "FrenchFries.html", description: "Golden fried potato strips served with ketchup." },
+{ price: 120, name: "Masala Papad", image: "https://i.pinimg.com/736x/e6/62/21/e662212eab96b48e865493a3345eb2f5.jpg", link: "Masalapapd.html", description: "Crispy papad topped with spices and veggies." },
+{ price: 200, name: "Chicken Pizza", image: "https://i.pinimg.com/736x/b1/4e/96/b14e967be4d2d4d121ec19d6de13ea7c.jpg", link: "Chickenpizza.html", description: "A delicious pizza topped with tender pieces of spiced chicken, cheese, and a flavorful tomato sauce." },
+{ price: 130, name: "Kachori", image: "https://i.pinimg.com/736x/ae/81/18/ae81182181359d587822bdb5cebaf0b8.jpg", link: "Kachori.html", description: "Fried pastry filled with spicy lentils or peas." },
+{ price: 90, name: "Chana Chaat", image: "https://i.pinimg.com/736x/4c/5e/f5/4c5ef5dcfd934a5e12dfd0e0acdcbb6f.jpg", link: "Chaana_chat.html", description: "Chickpeas mixed with chutneys and spices." },
+{ price: 150, name: "Chilli Paneer", image: "https://i.pinimg.com/736x/03/1d/03/031d03ad7dcd51e1672cdc6db3bf9aad.jpg", link: "Chillipaneer.html", description: "Spicy and crispy paneer cubes tossed in a tangy sauce." },
+{ price: 50, name: "Vegetable Sandwich", image: "https://i.pinimg.com/736x/4d/92/b9/4d92b9db3723c56f2215bb38ef307ed6.jpg", link: "vegetable_sandwich.html", description: "A fresh sandwich filled with crunchy vegetables and seasonings." },
+{ price: 250, name: "Chicken 65", image: "https://i.pinimg.com/736x/a9/19/dc/a919dc55b053db6c58369a1f758887d9.jpg", link: "chicken_65.html", description: "Fried chicken pieces coated with a spicy and tangy sauce." },
+{ price: 120, name: "Chicken Burger", image: "https://i.pinimg.com/736x/4c/17/32/4c1732cacb323c997dce7765eee0610b.jpg", link: "chicksburger.html", description: "A juicy chicken patty served in a soft burger bun with fresh veggies." }
+];
+
+
+function rendersnacks(snacksArray) {
+        recipeList.innerHTML = "";
+        snacksArray.forEach(snacks => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === snacks.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${snacks.link || "#"}" target="_blank">
+                    <img src="${snacks.image}" alt="${snacks.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${snacks.name}</h3>
+                <p>${snacks.description || ""}</p>
+                <p>₹${snacks.price} ${snacks.favourites ? `| ❤️ ${snacks.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    rendersnacks(data);
+                } else {
+                    rendersnacks([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        rendersnacks(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+
+</script></body>
+</html>

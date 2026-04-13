@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Recipes</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex;
+flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px);
+            max-width: 250px;
+            min-width: 200px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+                        padding: 10px;
+                        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+.recipe-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .recipe-item         video {
+            width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Popular Recipes</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+
+        <div class="slider-container">
+            <span>85</span>
+            <input type="range" id="priceSlider" min="85" max="1000" value="85" step="15">
+            <span>1000</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">85</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const priceSlider = document.getElementById("priceSlider");
+        const priceDisplay = document.getElementById("priceDisplay");
+        const recipeList = document.getElementById("recipeList");
+
+        const recipes = [ { price: 200, name: "Sizzling Brownie",image:"https://i.pinimg.com/736x/e1/e5/f9/e1e5f9e45234c7a519a568492d26018a.jpg",link: "https://example.com/sizzling_brownie", description: "Warm brownie served with sizzling hot chocolate sauce and ice cream."},
+            { price: 100, name: "Pizza Margherita", image: "https://i.pinimg.com/736x/35/50/30/35503019b6a63937f04c0b689ec90b34.jpg", link: "https://example.com/pizza", description: "Classic Italian pizza with fresh mozzarella and basil." },
+            {price:950,name:"Chicken Shawarma",image:"https://i.pinimg.com/736x/14/fd/b1/14fdb1127c5b833bf8018cf60e138579.jpg",link:"https://example.com/sha",description:"Juicy chicken wrapped with flavorful toppings."},
+            {price:230,name:"Kachori",image:"https://sinfullyspicy.com/wp-content/uploads/2021/03/3.jpg",link:"https://sinfullyspicy.com/matar-kulcha-delhi-style-matar/",description:"Crispy, flaky, spicy, deep-fried savory delight!"},
+            {price:120,name:"Dahi Vada",image:"https://sinfullyspicy.com/wp-content/uploads/2023/03/2-2.jpg",link:"https://sinfullyspicy.com/yellow-moong-dal-vada/",description:"Crispy, tangy, spicy, flavorful bites!"},
+            { price: 150, name: "Hyderabadi Dum Biryani", image: "https://i.pinimg.com/736x/10/7e/0f/107e0f1ff76a2e6b4cdb2793ad87d4ee.jpg", link: "https://example.com/chicken_biryani", description: "Aromatic rice cooked with spiced chicken and herbs." },
+            {price:270,name:"Vegetable Fried Rice",image:"https://sinfullyspicy.com/wp-content/uploads/2014/08/img_5197-3.jpg",link:"https://example.com/fried",description:" Flavorful, aromatic, quick, and delicious!"},
+            {price:150,name:"Delhi Style Golgappa",image:"https://sinfullyspicy.com/wp-content/uploads/2024/07/Golgappa-served-with-potato-stuffing-tangy-pani-puri-water-and-tamarind-chutney.jpg",link:"https://sinfullyspicy.com/delhi-style-golgappa-stuffing-pani-recipe/",description:" Crispy, tangy, spicy, flavorful bites!"},
+            { price: 200, name: "Cheeseburger", image: "https://i.pinimg.com/736x/09/94/c8/0994c8dc442a96fdc96bffe76aaca047.jpg", link: "https://example.com/cheeseburger", description: "Juicy grilled beef patty with melted cheese in a bun." },
+            {price:320,name:"Mushroom Pulao",image:"https://sinfullyspicy.com/wp-content/uploads/2023/07/2-5.jpg",link:"https://example.com",description:" Fragrant, savory, spiced rice delight!"},
+            { price: 120, name: "Gobbi Manchurian", image: "https://i.pinimg.com/736x/60/e6/d3/60e6d363303b0b23af7ba0df4736a2c4.jpg", link: "https://example.com/sushi", description: "Crispy cauliflower tossed in spicy sauce." },
+            { price: 250, name: "Chicken Wings", image: "https://i.pinimg.com/736x/9c/5a/fe/9c5afe59aa118a1f5f1649c5ddef26eb.jpg", link: "https://example.com/tandoori", description: "Crispy wings coated in garlic butter." },
+            { price: 75, name: "Pav Bhaji", image: "https://i.pinimg.com/736x/25/36/6b/25366b1b91e9f5dabec8fe8ab94ffa2f.jpg", link: "https://example.com/pav_bhaji", description: "Spiced mashed vegetables served with buttered bread." },
+            {price:600,name:"Panner 65",image:"https://sinfullyspicy.com/wp-content/uploads/2024/11/3-3.jpg",link:"https://example.com/pann",description:"Spicy, crispy, tangy, fried delight!"},
+            {price:450,name:"Kolkata Egg Rolls",image:"https://sinfullyspicy.com/wp-content/uploads/2021/10/8E6A65C9-F66C-4820-9E23-5E059953E8B4-1055x1536.jpeg",link:"https://example.com/egg",description:"Flaky, spicy, savory street delight!"},
+            {price:150,name:"Butter Chicken",image:"https://i.pinimg.com/736x/19/4d/c1/194dc12617edfbe1dce8a578e7274b96.jpg",link:"https://example.com/chicks",description:"Creamy spiced curry with tender chicken."},
+            {price:350,name:"Sphagetti",image:"https://i.pinimg.com/736x/36/99/a3/3699a31af75c6b1472857743125fb8e4.jpg",link:"https://example.com/sp",description:"Pasta strands in savory tomato sauce."},
+            {price:340,name:"Chocolate Glazed Donut",image:"https://i.pinimg.com/736x/b2/ea/97/b2ea976d2eb823446a53bacdd5c0190f.jpg",link:"https://example.com/donut",description:"Sweet ring with rich chocolate glaze."},
+            {price:250,name:"Chicken Nuggets",image:"https://i.pinimg.com/736x/df/ac/d5/dfacd5ec6983e15adeccf52649a5fe96.jpg",link:"https://example.com/nuggets",description:"Crispy bites of breaded chicken goodness."},
+            { price: 450, name: "Stuffed Panner Paratha", image: "https://sinfullyspicy.com/wp-content/uploads/2021/01/2-2.jpg", link: "https://example.com/steak", description: "Stuffed paneer paratha: Spiced, cheesy, crispy delight!" }
+        ];
+
+        function updateRecipes(price) {
+            recipeList.innerHTML = "";
+            const filteredRecipes = recipes.filter(recipe => recipe.price <= price);
+            filteredRecipes.forEach(recipe => {
+                const recipeItem = document.createElement("div");
+                recipeItem.classList.add("recipe-item");
+
+                const recipeLink = document.createElement("a");
+                recipeLink.href = recipe.link;
+                recipeLink.target = "_blank";
+
+                const recipeImage = document.createElement("img");
+                recipeImage.src = recipe.image;
+                recipeImage.alt = recipe.name;
+
+                const recipeText = document.createElement("div");
+                recipeText.textContent = recipe.name;
+
+                const recipeDescription = document.createElement("p");
+                recipeDescription.textContent = recipe.description;
+
+                recipeLink.appendChild(recipeImage);
+                recipeItem.appendChild(recipeLink);
+                recipeItem.appendChild(recipeText);
+                recipeItem.appendChild(recipeDescription);
+
+                if (recipe.video) {
+                    const recipeVideo = document.createElement("video");
+                    recipeVideo.src = recipe.video;
+                    recipeVideo.controls = true;
+                    recipeItem.appendChild(recipeVideo);
+                }
+
+                recipeList.appendChild(recipeItem);
+            });
+        }
+
+        priceSlider.addEventListener("input", function() {
+            const selectedPrice = priceSlider.value;
+            priceDisplay.textContent = selectedPrice;
+            updateRecipes(selectedPrice);
+        });
+
+        updateRecipes(priceSlider.value);
+    </script>
+</body>
+</html>

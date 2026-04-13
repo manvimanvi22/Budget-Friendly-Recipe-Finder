@@ -1,0 +1,464 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Friendly Recipe Finder</title>
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Stylesheet -->
+    <style>
+        /* Root Variables for Theming */
+        :root {
+            --primary-color: #ff7f50;
+            --secondary-color: #2c3e50;
+            --accent-color: #16a085;
+            --background-color: #f9f9f9;
+            --font-primary: 'Montserrat', sans-serif;
+            --font-secondary: 'Playfair Display', serif;
+        }
+        /* Basic Reset */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--background-color);
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        /* Header */
+        header {
+            background-color: #ffffff;
+            color: var(--secondary-color);
+            padding: 20px 20px;
+            text-align: center;
+            position: relative;
+        }
+        header .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        header img {
+            height: 100px;
+            margin-right: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-family: var(--font-secondary);
+        }
+        /* Navigation */
+        nav {
+            background-color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 25px;
+        }
+        nav ul li a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        /* Category Links */
+        .category-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 60px 20px;
+            flex-wrap: wrap;
+        }
+        .category-links a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        .category-links a:hover {
+            transform: translateY(-10px);
+        }
+        .category-links a img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .category-links a span {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        /* Search Bar */
+       
+        /* Sections */
+        h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-family: var(--font-secondary);
+            margin: 60px 0 30px;
+            color: var(--secondary-color);
+        }
+        .recipes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 0 20px;
+        }
+        .recipes .card {
+            width: 250px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .recipes .card:hover {
+            transform: translateY(-10px);
+        }
+        .recipes .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .recipes .card .card-content {
+            padding: 15px;
+            text-align: center;
+        }
+        .recipes .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        .recipes .card p {
+            font-size: 1rem;
+            color: #555;
+        }
+        /* Read More Button */
+        .recipes .card a {
+            display: block;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+        .recipes .card a:hover {
+            color: var(--accent-color);
+        }
+        /* "More like this" Link */
+        .more-link {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .more-link a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 30px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .more-link a:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.3s ease;
+            z-index: 1000;
+        }
+        #back-to-top:hover {
+            background-color: var(--accent-color);
+        }
+        /* Footer */
+        footer {
+            background-color: #ffffff;
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+        footer p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .social-icons {
+            margin-top: 10px;
+        }
+        .social-icons a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: var (--secondary-color);
+            font-size: 1.8rem;
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: var(--primary-color);
+        }
+        /* Media Queries */
+        @media (max-width: 768px) {
+            header .header-content {
+                flex-direction: column;
+            }
+            header img {
+                margin-bottom: 15px;
+            }
+            header h1 {
+                font-size: 2.5rem;
+                text-align: center;
+            }
+            .search-bar input[type="text"] {
+                width: 80%;
+            }
+            .recipes .card {
+                width: 90%;
+            }
+.challenges {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .challenges .card img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        .challenges .card {
+            text-align: center;
+        }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Top Button -->
+    <div id="back-to-top"><i class="fas fa-arrow-up"></i></div>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+           <img src="img (1)-photoaidcom-cropped (2) (8)-Photoroom.jpg" alt="logo" class="logo">
+
+            <h1>Budget Friendly Recipe Finder</h1>
+        </div>
+    </        </div>
+    </header>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="veg.html">Veg Recipes</a></li>
+            <li><a href="nonveg.html">Non-Veg Recipes</a></li>
+                        <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">SignUp</a></li>
+            
+        </ul>
+    </nav>
+    <!-- Search Bar -->
+   
+    <!-- Category Links -->
+    <div class="category-links">
+        <a href="breakfast.html">
+            <img src="https://i.pinimg.com/736x/5c/4f/63/5c4f63f5c7726b46230e590530375797.jpg" alt="Breakfast">
+            <span>Breakfast</span>
+        </a>
+        <a href="lunch.html">
+            <img src="https://i.pinimg.com/736x/2b/64/e1/2b64e15ac11687bb3074b9f7abc87edd.jpg" alt="Lunch">
+            <span>Lunch</span>
+        </a>
+        <a href="dinner.html">
+            <img src="https://i.pinimg.com/736x/fa/86/fb/fa86fb4baa3d581ed3611ffcf15e2e6f.jpg" alt="Dinner">
+            <span>Dinner</span>
+        </a>        <a href="snacks.html">
+            <img src="https://i.pinimg.com/736x/a5/76/73/a57673b7e5df0dd5e0ad61879d8b8a32.jpg" alt="Snacks">
+            <span>Snacks</span>
+        </a>
+        <a href="drinks.html">
+            <img src="https://i.pinimg.com/736x/92/fe/f3/92fef3edf2861e33b4843516000bae19.jpg" alt="Drinks">
+            <span>Drinks</span>
+        </a>
+        <a href="desserts.html">
+            <img src="https://i.pinimg.com/736x/aa/b8/76/aab876fedc2b45fb6512b2782ad1506b.jpg" alt="Desserts">
+            <span>Desserts</span>
+        </a>
+    </div>
+    <!-- Healthy Recipes Section -->
+    <h2>Healthy Recipes</h2>
+    <div class="recipes">
+        <!-- Recipe Card 1 -->
+        <div class="card">
+            <img src="https://i.pinimg.com/736x/93/c5/49/93c5492c509282be6b7cef80ed2e7179.jpg" alt="Besan Chilla">
+            <div class="card-content">
+                <h3>Besan Chilla</h3>
+                <p>A healthy and quick pancake made from gram flour and spices.</p>
+                <a href="besanchilla.html">Read More</a>
+            </div>
+        </div>
+        <!-- Recipe Card 2 -->
+        <div class="card">
+            <img src="https://i.pinimg.com/736x/07/7e/bc/077ebc6ae6cad1dbdb3f610fc893f921.jpg" alt="Pongal">
+            <div class="card-content">
+                <h3>Pongal</h3>
+                <p>A nutritious South Indian dish made with rice and lentils.</p>
+                <a href="pongal.html">Read More</a>
+            </div>
+        </div>
+        <!-- Recipe Card 3 -->
+        <div class="card">
+            <img src="https://i.pinimg.com/736x/31/17/79/3117798277633d30993e40fdb344e789.jpg" alt="South Indian Idli">
+            <div class="card-content">
+                <h3>South Indian Idli</h3>
+                <p>Soft and fluffy steamed rice cakes, perfect for a light meal.</p>
+                <a href="idly.html">Read More</a>
+            </div>
+        </div>
+        <!-- Recipe Card 4 -->
+        <div class="card">
+            <img src="https://sinfullyspicy.com/wp-content/uploads/2023/09/1-4.jpg" alt="Methi Matar Malai">
+            <div class="card-content">
+                <h3>Methi Matar Malai</h3>
+                <p>Creamy curry made with fenugreek leaves and peas.</p>
+                <a href="methimatarmalai.html">Read More</a>
+            </div>
+        </div>
+    </div>
+    <!-- "More like this" Link for Healthy Recipes -->
+    <div class="more-link">
+        <a href="healthy-recipes.html">More like this</a>
+    </div>
+    <!-- Easy to Make Recipes Section -->
+    <h2>Easy to Make Recipes</h2>
+    <div class="recipes">
+        <!-- Recipe Card 1 -->
+        <div class="card">
+            <img src="https://www.jcookingodyssey.com/wp-content/uploads/2023/06/jeera-rice-3.jpg" alt="Jeera Rice">
+            <div class="card-content">
+                <h3>Jeera Rice</h3>
+                <p>Simple and flavorful rice dish seasoned with cumin seeds.</p>
+                <a href="jeerarice.html">Read More</a>
+            </div>
+        </div>
+        <!-- Recipe Card 2 -->
+        <div class="card">
+            <img src="https://www.thespruceeats.com/thmb/NonbmV7-N7wA20-JCvxZh-ZFQk8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/KachumberIndianCucumberSalad-TheSpruce_DianaChistruga-b24cf35030c64bbea3749827724abf1a.jpg" alt="Cucumber Salad">
+            <div class="card-content">
+                <h3>Cucumber Salad</h3>
+                <p>A refreshing salad made with cucumbers, onions, and tomatoes.</p>
+                <a href="cucumbersalad.html">Read More</a>
+            </div>
+        </div>
+        <!-- Recipe Card 3 -->
+        <div class="card">
+            <img src="https://i.pinimg.com/736x/9d/99/b4/9d99b4c2b95c5b2abc3563ba88c5d90d.jpg" alt="Coconut Balls">
+            <div class="card-content">
+                <h3>Coconut Balls</h3>
+                <p>Delicious no-bake coconut treats made with just two ingredients.</p>
+                <a href="coconutballs.html">Read More</a>
+            </div>
+        </div>
+        <!-- Recipe Card 4 -->
+        <div class="card">
+            <img src="https://i.pinimg.com/originals/93/7e/7c/937e7c4f10e311b0f945e329f9a8a81e.jpg" alt="Chocolate Mug Cake">
+            <div class="card-content">
+                <h3>Chocolate Mug Cake</h3>
+                <p>A quick and easy chocolate cake made in a mug in minutes.</p>
+                <a href="chocolatemugcake.html">Read More</a>
+            </div>
+        </div>
+    </div>
+    <!-- "More like this" Link for Easy to Make Recipes -->
+   
+    <!-- Cooking Challenges Section -->
+   
+   
+        <!-- Challenge Card 2 -->
+     
+        <!-- More Challenges -->
+    </div>
+    <!-- "More Challenges" Link -->
+    
+    <!-- Interactive Elements Section -->
+    
+    <!-- Notifications and Reminders Script -->
+    <script>
+        // Function to Show Notification
+        function showNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body: body });
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        new Notification(title, { body: body });
+                    }
+                });
+            }
+        }
+
+        // Example Usage
+        showNotification('Reminder', 'Don\'t forget to cook your favorite recipe today!');
+
+        // Interactive Elements - Poll
+        
+ 
+    </script>
+    <!-- Footer -->
+    <footer>
+        <p>Contact Us:</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+    </footer>
+</body>
+</html>

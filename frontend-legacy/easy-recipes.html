@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Easy to Make Recipes</title>
+  <style>
+    body {
+      font-family: 'Playfair Display', serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: black;
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+    .scroll-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      max-width: 1200px;
+    }
+    .price-range {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #555;
+    }
+    .slider-container {
+      width: 100%;
+      margin: 20px 0;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    input[type="range"] {
+      width: 80%;
+      appearance: none;
+      height: 6px;
+      background: #ddd;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      border: 4px solid black;
+      cursor: pointer;
+    }
+    .price-value {
+      font-size: 20px;
+      color: #555;
+      margin-top: 10px;
+    }
+    .recipe-list {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+    }
+    .recipe-item {
+      flex: 1 1 calc(25% - 20px);
+      max-width: 250px;
+      min-width: 200px;
+      background: #f4f4f4;
+      border-radius: 5px;
+      text-align: center;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .recipe-item img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    .recipe-item p {
+      margin: 10px 0 0;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Easy to Make Recipes</h1>
+
+  <div class="scroll-container">
+    <div class="price-range">Price Range:</div>
+
+    <div class="slider-container">
+      <span>50</span>
+      <input type="range" id="priceSlider" min="50" max="1500" value="50" step="50">
+      <span>1500</span>
+    </div>
+
+    <div class="price-value">
+      Selected Price: <span id="priceDisplay">50</span> Rupees
+    </div>
+
+    <div class="recipe-list" id="recipeList">
+      <!-- Recipes will appear here -->
+    </div>
+  </div>
+
+  <script>
+    const slider = document.getElementById("priceSlider");
+    const priceDisplay = document.getElementById("priceDisplay");
+    const recipeList = document.getElementById("recipeList");
+
+    const recipes= [
+      { price: 15, name: "Jeera Rice", image: "https://www.jcookingodyssey.com/wp-content/uploads/2023/06/jeera-rice-3.jpg", link: "jeerarice.html", description: "Simple and flavorful rice dish seasoned with cumin seeds." },
+      { price: 11, name: "Cucumber Salad", image: "https://www.thespruceeats.com/thmb/NonbmV7-N7wA20-JCvxZh-ZFQk8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/KachumberIndianCucumberSalad-TheSpruce_DianaChistruga-b24cf35030c64bbea3749827724abf1a.jpg", link: "cucumbersalad.html", description: "A refreshing salad made with cucumbers, onions, and tomatoes." },
+      { price: 14, name: "Chocolate Mugcake", image: "https://i.pinimg.com/originals/93/7e/7c/937e7c4f10e311b0f945e329f9a8a81e.jpg", link: "chocolatemugcake.html", description: "A quick and easy chocolate cake made in a mug in minutes." },
+      { price: 6, name: "Coconut Balls", image:"https://i.pinimg.com/736x/9d/99/b4/9d99b4c2b95c5b2abc3563ba88c5d90d.jpg", link:"coconutballs.html",description: "Delicious no-bake coconut treats made with just two ingredients." },
+      { price: 12, name: "Aloo Toast", image: "https://i.pinimg.com/736x/e3/99/f9/e399f9529c8843ffac734117ff282389.jpg", link: "alootoast.html", description: "Mashed spiced potatoes grilled in toast." },
+      { price: 15, name: "Vegetable Poha", image: "https://i.pinimg.com/736x/fa/bd/36/fabd36cffbec436325f2517b36636a33.jpg", link: "poha.html", description: "Flattened rice cooked with spices and veggies." },
+      { price: 29, name: "Tomato Pasta", image: "https://i.pinimg.com/736x/fe/20/34/fe20347922579377257c25da1bfb515e.jpg", link: "tomatopasta.html", description: "Simple pasta in tangy tomato sauce." },
+      { price: 54, name: "Paneer Wrap", image: "https://i.pinimg.com/736x/44/3e/3e/443e3eb28ee9315ab961787df489e30d.jpg", link: "pannerwrap.html", description: "Paneer tossed in spices and wrapped in roti." }
+    ];
+
+   <script>
+    function rendereasy(easyArray) {
+        recipeList.innerHTML = "";
+        easyArray.forEach(easy => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === easy.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${easy.link || "#"}" target="_blank">
+                    <img src="${easy.image}" alt="${easy.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${easy.name}</h3>
+                <p>${easy.description || ""}</p>
+                <p>₹${easy.price} ${easy.favourites ? `| ❤️ ${easy.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    rendereasy(data);
+                } else {
+                    rendereasy([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        rendereasy(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+     // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+
+  </script>
+</body>
+</html>

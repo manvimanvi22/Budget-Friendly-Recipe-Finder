@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Besan Chilla Recipe | Budget Friendly Recipe Finder</title>
+   
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Stylesheet -->
+    <style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        line-height: 1.6;
+    }
+    /* Header */
+    header {
+        background: #ffffff; /* Changed background color to white */
+        color: #000000;
+        padding: 20px 0;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    /* Container */
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    /* Recipe Title */
+    .recipe-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .recipe-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .recipe-title p {
+        font-size: 1.2rem;
+        color: #333333;
+    }
+    /* Main Content */
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: space-between;
+    }
+    /* Left Column */
+    .left-column {
+        flex: 1;
+        min-width: 300px;
+    }
+    /* Right Column */
+    .right-column {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+   .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 15px;
+    justify-content: center;
+}
+
+.image-gallery img {
+    width: 100%;
+    height: auto;
+    max-height: 400px; /* Ensure images don’t stretch */
+    border-radius: 15px;
+    object-fit: cover;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+    /* Interactive Elements */
+    .interactive-section {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #dddddd;
+    }
+    /* Serving Size Adjuster */
+    .serving-size {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .serving-size label {
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+    .serving-size input {
+        width: 60px;
+        padding: 5px;
+        font-size: 1rem;
+        text-align: center;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+    /* Add to Favorites Button */
+    .favorites-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: auto;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .favorites-btn.active {
+        background: #ff0000;
+    }
+    /* Ingredient Checklist */
+    .ingredients {
+        margin-bottom: 30px;
+    }
+    .ingredients h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .ingredient-details {
+        display: flex;
+        align-items: center;
+    }
+    .ingredient-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
+    .ingredient-item label {
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .ingredient-cost {
+        font-size: 1.1rem;
+        color: #555555;
+    }
+    /* Total Cost */
+    .total-cost {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 10px;
+        color: #000000;
+    }
+    /* Instructions */
+    .instructions {
+        margin-top: 30px;
+    }
+    .instructions h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .instruction-step {
+        display: none;
+        background: #f0f0f0;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        font-size: 1.1rem;
+        min-height: 200px;
+    }
+    .instruction-step.active {
+        display: block;
+    }
+    .instruction-step::before {
+        content: attr(data-step);
+        position: absolute;
+        left: -40px;
+        top: 20px;
+        background: #000000;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    /* Step Navigation */
+    .step-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .step-navigation button {
+        background: #000000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+    }
+    .step-navigation button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+    /* Nutritional Info */
+    .nutrition {
+        margin-top: 30px;
+    }
+    .nutrition h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .nutrition ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .nutrition li {
+        background: #f0f0f0;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 1rem;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+    /* Footer */
+    footer {
+        background-color: #000000;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 1.1rem;
+        margin-top: 50px;
+    }
+    footer p {
+        margin-bottom: 10px;
+    }
+    .social-icons a {
+        color: #ffffff;
+        margin: 0 10px;
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+    .social-icons a:hover {
+        color: #999999;
+    }
+    /* Media Queries */
+    @media (max-width: 768px) {
+        main {
+            flex-direction: column;
+        }
+        .step-navigation button {
+            margin: 10px 0;
+        }
+        .instruction-step::before {
+            left: -35px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1>Budget Friendly Recipe Finder</h1>
+</header>
+
+<!-- Container -->
+<div class="container">
+
+    <!-- Recipe Title -->
+    <div class="recipe-title">
+        <h2>Chocolate Tresleches Recipe</h2>
+        <p>Moist, chocolatey, indulgent, creamy, rich, layered dessert bliss!.</p>
+    </div>
+ <!-- Main Content -->
+ <main>
+       
+    <!-- Left Column -->
+    <div class="left-column">
+
+        <!-- Image Gallery -->
+        <div class="image-gallery">
+            <img src="https://houseofnasheats.com/wp-content/uploads/2023/06/Chocolate-Tres-Leches-Cake-Recipe-18.jpg" alt="Besan Chilla">
+            <img src="https://houseofnasheats.com/wp-content/uploads/2023/06/Chocolate-Tres-Leches-Cake-Recipe-16.jpg" alt="Besan Chilla Preparation">
+        </div>
+   <!-- Nutritional Info for Chocolate Tres Leches -->
+<div class="nutrition">
+    <h3>Nutritional Information (Per Serving)</h3>
+    <ul>
+        <li><strong>Calories:</strong> 300 kcal</li>
+        <li><strong>Protein:</strong> 6g</li>
+        <li><strong>Carbs:</strong> 40g</li>
+        <li><strong>Fat:</strong> 12g</li>
+        <li><strong>Fiber:</strong> 2g</li>
+        <li><strong>Iron:</strong> 1.5mg</li>
+        <li><strong>Calcium:</strong> 180mg</li>
+        <li><strong>Vitamin C:</strong> 0mg</li>
+    </ul>
+</div>
+  <!-- Why You'll Love This Dish -->
+<div class="why-love">
+    <h3>Why You'll Love This Dish</h3>
+    <ul>
+        <li>🍫 <strong>Decadent Chocolate Bliss:</strong> A rich and indulgent dessert for chocoholics.</li>
+        <li>🌟 <strong>Velvety Texture:</strong> Creamy, moist layers soaked in three kinds of milk.</li>
+        <li>🎂 <strong>Celebration-Worthy:</strong> Perfect for birthdays, anniversaries, or any special event.</li>
+        <li>💸 <strong>Homemade Luxury:</strong> Feels extravagant but is cost-effective to make.</li>
+        <li>🧑‍🍳 <strong>Customizable:</strong> Add toppings like chocolate shavings or berries for a personal touch.</li>
+        <li>❄️ <strong>Best Served Chilled:</strong> A refreshing and indulgent treat to cool you down.</li>
+    </ul>
+</div>
+  <!-- Right Column -->
+<div class="right-column">
+    <div class="interactive-section">
+
+        <!-- Add to Favorites Button -->
+        <button class="favorites-btn" id="favorites-btn"><i class="fas fa-heart"></i> Add to Favorites</button>
+
+        <!-- Serving Size Adjuster -->
+        <div class="serving-size">
+            <label for="servings">Servings:</label>
+            <input type="number" id="servings" name="servings" min="1" value="2">
+        </div>
+           <!-- Ingredients Checklist with Budget Info for Chocolate Tres Leches -->
+<div class="ingredients">
+    <h3>Ingredients</h3>
+    <div class="ingredient-item">
+        <div class="ingredient-details">
+            <input type="checkbox" id="ingredient1">
+            <label for="ingredient1"><span id="cake-mix-quantity">1 Box</span> Chocolate Cake Mix</label>
+        </div>
+        <span class="ingredient-cost">₹250</span>
+    </div>
+    <div class="ingredient-item">
+        <div class="ingredient-details">
+            <input type="checkbox" id="ingredient2">
+            <label for="ingredient2"><span id="milk-quantity">1 Cup</span> Full-Fat Milk</label>
+        </div>
+        <span class="ingredient-cost">₹30</span>
+    </div>
+    <div class="ingredient-item">
+        <div class="ingredient-details">
+            <input type="checkbox" id="ingredient3">
+            <label for="ingredient3"><span id="evaporated-milk-quantity">1 Can</span> Evaporated Milk</label>
+        </div>
+        <span class="ingredient-cost">₹100</span>
+    </div>
+    <div class="ingredient-item">
+        <div class="ingredient-details">
+            <input type="checkbox" id="ingredient4">
+            <label for="ingredient4"><span id="condensed-milk-quantity">1 Can</span> Sweetened Condensed Milk</label>
+        </div>
+        <span class="ingredient-cost">₹120</span>
+    </div>
+    <div class="ingredient-item">
+        <div class="ingredient-details">
+            <input type="checkbox" id="ingredient5">
+            <label for="ingredient5"><span id="whipped-cream-quantity">1 Cup</span> Whipped Cream</label>
+        </div>
+        <span class="ingredient-cost">₹50</span>
+    </div>
+</div>
+<!-- Total Cost Display -->
+<div class="total-cost">
+    Total Estimated Cost: ₹<span id="total-cost">550</span>
+</div>
+<!-- Instructions -->
+<div class="instructions">
+    <h3>Instructions</h3>
+    <div id="instruction-steps">
+        <div class="instruction-step active" data-step="1">
+            <p><strong>Step 1:</strong> Prepare the chocolate cake mix according to the package instructions and bake it. Let the cake cool completely.</p>
+        </div>
+        <div class="instruction-step" data-step="2">
+            <p><strong>Step 2:</strong> Use a fork or skewer to poke holes all over the cake.</p>
+        </div>
+        <div class="instruction-step" data-step="3">
+            <p><strong>Step 3:</strong> In a bowl, mix together full-fat milk, evaporated milk, and sweetened condensed milk. Pour the milk mixture slowly over the cake, ensuring it soaks into the holes.</p>
+        </div>
+        <div class="instruction-step" data-step="4">
+            <p><strong>Step 4:</strong> Spread whipped cream evenly over the top of the cake.</p>
+        </div>
+        <div class="instruction-step" data-step="5">
+            <p><strong>Step 5:</strong> Refrigerate the cake for at least 4 hours or overnight to let the flavors blend beautifully.</p>
+        </div>
+        <div class="instruction-step" data-step="6">
+            <p><strong>Step 6:</strong> Garnish with chocolate shavings, cocoa powder, or berries for a decorative touch. Serve chilled and enjoy!</p>
+        </div>
+    </div>
+</div>
+ <!-- Step Navigation Buttons -->
+ <div class="step-navigation">
+    <button id="prev-step" disabled>Previous</button>
+    <button id="next-step">Next</button>
+</div>
+</div>
+<!-- Footer -->
+<footer>
+<p>Follow us for more delicious recipes!</p>
+<div class="social-icons">
+    <a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.facebook.com"><i class="fab fa-facebook"></i></a>
+</div>
+</footer>
+<script>
+    const servingInput = document.getElementById('servings');
+const totalCostElement = document.getElementById('total-cost');
+const ingredients = {
+    cakeMix: { quantity: 1, unit: 'Box', element: document.getElementById('cake-mix-quantity'), cost: 250 },
+    milk: { quantity: 1, unit: 'Cup', element: document.getElementById('milk-quantity'), cost: 30 },
+    evaporatedMilk: { quantity: 1, unit: 'Can', element: document.getElementById('evaporated-milk-quantity'), cost: 100 },
+    condensedMilk: { quantity: 1, unit: 'Can', element: document.getElementById('condensed-milk-quantity'), cost: 120 },
+    whippedCream: { quantity: 1, unit: 'Cup', element: document.getElementById('whipped-cream-quantity'), cost: 50 },
+};
+servingInput.addEventListener('change', updateIngredients);
+
+    function updateIngredients() {
+        let servings = parseInt(servingInput.value);
+        if (servings < 1) {
+            servings = 1;
+            servingInput.value = 1;
+        }
+        let totalCost = 0;
+        // Update quantities and calculate total cost
+        for (const key in ingredients) {
+            const item = ingredients[key];
+            // Update quantities if element exists
+            if (item.element) {
+                const newQuantity = (item.quantity * servings / 2).toFixed(2);
+                item.element.textContent = `${newQuantity} ${item.unit}`.trim();
+            }
+            // Calculate cost
+            const cost = (item.cost * servings / 2).toFixed(2);
+            // Update cost display if applicable
+            const costElement = document.querySelector(`label[for='ingredient${Object.keys(ingredients).indexOf(key)+1}']`).parentNode.nextElementSibling;
+            if (costElement) {
+                costElement.textContent = `₹${cost}`;
+            }
+            totalCost += parseFloat(cost);
+        }
+        totalCostElement.textContent = totalCost.toFixed(2);
+    }
+
+    // Initialize the first time
+    updateIngredients();
+
+    // Step-by-Step Cooking Mode Script
+    const steps = document.querySelectorAll('.instruction-step');
+    const prevBtn = document.getElementById('prev-step');
+    const nextBtn = document.getElementById('next-step');
+    let currentStep = 0;
+
+    function showStep(index) {
+        steps.forEach((step, i) => {
+            step.classList.toggle('active', i === index);
+        });
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === steps.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+
+    // Initialize the first step
+    showStep(currentStep);
+
+    // Add to Favorites Functionality
+    const favoritesBtn = document.getElementById('favorites-btn');
+    const recipeTitle = document.querySelector('.recipe-title h2').innerText;
+
+    // Check if recipe is already in favorites
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    if (favorites.includes(recipeTitle)) {
+        favoritesBtn.classList.add('active');
+        favoritesBtn.innerHTML = '<i class="fas fa-heart"></i> Added to Favorites';
+    }
+
+    favoritesBtn.addEventListener('click', () => {
+        favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        if (favorites.includes(recipeTitle)) {
+            // Remove from favorites
+            favorites = favorites.filter(item => item !== recipeTitle);
+            favoritesBtn.classList.remove('active');
+            favoritesBtn.innerHTML = '<i class="fas fa-heart"></i> Add to Favorites';
+        } else {
+            // Add to favorites
+            favorites.push(recipeTitle);
+            favoritesBtn.classList.add('active');
+            favoritesBtn.innerHTML = '<i class="fas fa-heart"></i> Added to Favorites';
+        }
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+    });
+</script>
+
+</body>
+</html>

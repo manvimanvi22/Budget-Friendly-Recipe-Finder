@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veg Recipes</title>
+    <style>
+        body {
+            font-family: Georgia, Serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex; /* Flexbox layout */
+            flex-wrap: wrap; /* Wrap to the next row when needed */
+            gap: 20px;
+            justify-content: center; /* Center-align items */
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px); /* Flexible layout with 4 items per row */
+            max-width: 250px; /* Limit max width for larger screens */
+            min-width: 200px; /* Minimum size to maintain responsiveness */
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px; /* Fixed width */
+            height: 250px; /* Fixed height */
+            object-fit: cover; /* Ensures the image is cropped proportionally */
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Veg Recipes</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+       
+        <div class="slider-container">
+            <span>20</span>
+            <input type="range" id="priceSlider" min="20" max="1000" value="20" step="15">
+            <span>1000</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">20</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById("priceSlider");
+        const recipeList = document.getElementById("recipeList");
+        const priceDisplay = document.getElementById("priceDisplay");
+    
+        const recipes = [
+            { price: 22, name: "Besan Chilla", image: "https://i.pinimg.com/736x/93/c5/49/93c5492c509282be6b7cef80ed2e7179.jpg", link: "besanchilla.html", description: "A healthy and tasty South Indian breakfast dish made with semolina." },
+            { price: 75, name: "Aloo Paratha", image: "https://i0.wp.com/khaddoroshik.com/wp-content/uploads/2023/12/Aloo-Paratha-Recipe.webp?w=1024&ssl=1", link: "alooparatha.html", description: "A delicious stuffed Indian flatbread filled with spiced mashed potatoes." },
+            { price: 190, name: "Paneer Butter Masala", image: "https://i.pinimg.com/736x/d6/be/99/d6be99b3ffc8033087e466883f7459f1.jpg", link: "paneerbuttermasala.html", description: "A rich and creamy tomato-based curry with soft paneer cubes." },
+            { price: 76, name: "Veg Biryani", image: "https://i.pinimg.com/736x/95/80/7b/95807ba96c11e2387e909767c19f68ff.jpg", link: "vegbiryani.html", description: "A fragrant rice dish cooked with spices and mixed vegetables." },
+            {price:51,name:"Chickpea Spinach Curry",image:"https://i.pinimg.com/736x/d1/c1/61/d1c161fb52b8002e2a835305f5c0f8fe.jpg",link:"chickpeaspinach.html",description:"Hearty, nutritious chickpea and spinach curry."},
+            {price:50,name:"Gutti Vankaya Curry",image:"https://i.pinimg.com/736x/38/e2/77/38e277f870defd6f3d7d13fb722de888.jpg",link:"guttivankaya.html",description:"Stuffed brinjal curry with rich spices."},
+            { price: 95, name: "Palak Paneer", image: "https://i.pinimg.com/736x/2f/5e/ae/2f5eae6b7d5badd5dbeee57e81d28a84.jpg", link: "palakpaneer.html", description: "A North Indian curry made with pureed spinach and paneer cubes." },
+            {price:78,name:"Dal Makhani",image:"https://i.pinimg.com/736x/2a/c6/57/2ac657e8a320ac35ac5b7c67c339ea1d.jpg",link:"dalmakhani.html",description:"Creamy, buttery, rich, slow-cooked lentil curry."},
+            { price: 106, name: "Chole Bhature", image: "https://i.pinimg.com/736x/f5/9c/9a/f59c9a7f63c2cd4bd587f3de73f184a4.jpg", link: "cholebhature.html", description: "A classic Punjabi dish of spicy chickpeas served with deep-fried bread." },
+            { price: 74, name: "Veg Pulao", image: "https://i.pinimg.com/736x/18/c5/8d/18c58d13627917fb60d39d2ce019d6a1.jpg", link: "vegpulav.html", description: "Fragrant rice with spiced vegetables." },
+             { price: 13, name: "Aloo tikki", image: "https://i.pinimg.com/736x/cf/e2/33/cfe233928aa6d63b982ddfd048cee847.jpg", link: "alootikki.html", description: "Crispy spiced potato patties, delicious snack." },
+            { price: 20, name: "Veg Spring rolls", image: "https://i.pinimg.com/736x/29/41/a6/2941a6153669acb5a03c375fd50c54c4.jpg", link: "vegspringrolls.html", description: "Crispy, stuffed, savory, fried, delicious." },
+             { price: 20, name: "Veg Grilled Sandwich", image: "https://i.pinimg.com/736x/32/e6/3a/32e63adb3a5644f3ae88b86e98187286.jpg", link: "veggrillsandwich.html", description: "Fresh, crunchy, cheesy, healthy, delicious sandwich. " },
+             { price: 42, name: "Veg Kofta Curry",  image: "https://i.pinimg.com/736x/77/6b/6d/776b6d49ec2ddc58033db5786ee135f2.jpg", link: "vegkofta.html", description: "Spiced vegetable balls in rich gravy." },
+            { price: 48, name: "White Sause Pasta",   image: "https://i.pinimg.com/736x/e8/68/c8/e868c8f4d0928bcb470fcf4e69c212cc.jpg", link: "whitesaucepasta.html", description: "Creamy, cheesy, garlic-flavored pasta delight." },
+             { price: 20, name: "Aloo Fry Curry",  image: "https://i.pinimg.com/736x/80/e2/01/80e2014e953fc0de1c980a05982250fc.jpg", link: "aloofry.html", description: "Spiced, flavorful, potato-based Indian curry." },
+             {price:25,name:"Bendi Fry",image:"https://i.pinimg.com/736x/52/d3/7b/52d37bd575f08565db4e97c8c2ade53d.jpg",link:"bendifry.html", description:"Crispy, spiced, stir-fried okra delight."},
+             {price:35,name:"Veg Noodles",image:"https://i.pinimg.com/736x/ae/a4/36/aea4369b1d071a4382b4b909669c6814.jpg",link:"vegnoodles.html",description:"Spicy, stir-fried, flavorful veggie noodles."},
+            {price:30,name:"Dhokla",image:"https://i.pinimg.com/736x/3e/e6/60/3ee660d8ddfa8dc26b1e975f93c60648.jpg",link:"dhokla.html",description:"Soft, spongy, steamed savory gram flour cake."},
+        ];
+
+    
+        function renderveg(vegArray) {
+        recipeList.innerHTML = "";
+        vegArray.forEach(veg => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === veg.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${veg.link || "#"}" target="_blank">
+                    <img src="${veg.image}" alt="${veg.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${veg.name}</h3>
+                <p>${veg.description || ""}</p>
+                <p>₹${veg.price} ${veg.favourites ? `| ❤️ ${veg.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    renderveg(data);
+                } else {
+                    renderveg([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        renderveg(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+</script>
+</body>
+</html>

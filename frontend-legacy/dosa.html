@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dosa Recipe | Budget Friendly Recipe Finder</title>
+
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Stylesheet -->
+    <style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        line-height: 1.6;
+    }
+    /* Header */
+    header {
+        background: #000000;
+        color: #ffffff;
+        padding: 20px 0;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    /* Container */
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    /* Recipe Title */
+    .recipe-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .recipe-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .recipe-title p {
+        font-size: 1.2rem;
+        color: #333333;
+    }
+    /* Main Content */
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: space-between;
+    }
+    /* Left Column */
+    .left-column {
+        flex: 1;
+        min-width: 300px;
+    }
+    /* Right Column */
+    .right-column {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+    /* Image Gallery */
+    .image-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .image-gallery img {
+        width: 100%;
+        border-radius: 15px;
+        object-fit: cover;
+        height: auto;
+        max-height: 400px;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .image-gallery img:hover {
+        transform: scale(1.05);
+        filter: brightness(0.9);
+    }
+    /* Interactive Elements */
+    .interactive-section {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #dddddd;
+    }
+    /* Serving Size Adjuster */
+    .serving-size {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .serving-size label {
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+    .serving-size input {
+        width: 60px;
+        padding: 5px;
+        font-size: 1rem;
+        text-align: center;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+    /* Add to Favorites Button */
+    .favorites-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: auto;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .favorites-btn.active {
+        background: #ff0000;
+    }
+    /* Ingredient Checklist */
+    .ingredients {
+        margin-bottom: 30px;
+    }
+    .ingredients h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .ingredient-details {
+        display: flex;
+        align-items: center;
+    }
+    .ingredient-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
+    .ingredient-item label {
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .ingredient-cost {
+        font-size: 1.1rem;
+        color: #555555;
+    }
+    /* Total Cost */
+    .total-cost {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 10px;
+        color: #000000;
+    }
+    /* Instructions */
+    .instructions {
+        margin-top: 30px;
+    }
+    .instructions h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .instruction-step {
+        display: none;
+        background: #f0f0f0;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        font-size: 1.1rem;
+        min-height: 200px;
+    }
+    .instruction-step.active {
+        display: block;
+    }
+    .instruction-step::before {
+        content: attr(data-step);
+        position: absolute;
+        left: -40px;
+        top: 20px;
+        background: #000000;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    /* Step Navigation */
+    .step-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .step-navigation button {
+        background: #000000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+    }
+    .step-navigation button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+    /* Nutritional Info */
+    .nutrition {
+        margin-top: 30px;
+    }
+    .nutrition h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .nutrition ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .nutrition li {
+        background: #f0f0f0;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 1rem;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+    /* Why You'll Love This Dish */
+    .why-love {
+        margin-top: 30px;
+    }
+    .why-love h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .why-love ul {
+        list-style-type: none;
+    }
+    .why-love li {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        padding-left: 30px;
+        position: relative;
+    }
+    .why-love li:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    /* Variations */
+    .variations {
+        margin-top: 30px;
+        background: #fff3e0;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #fb8c00;
+    }
+    .variations h4 {
+        font-size: 1.3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .variations ul {
+        margin-left: 20px;
+    }
+    /* Occasion Icons */
+    .occasions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    .occasion-item {
+        text-align: center;
+        margin: 10px;
+        flex: 1;
+        min-width: 120px;
+    }
+    .occasion-icon {
+        font-size: 2rem;
+        margin-bottom: 5px;
+    }
+    /* Footer */
+    footer {
+        background-color: #000000;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 1.1rem;
+        margin-top: 50px;
+    }
+    footer p {
+        margin-bottom: 10px;
+    }
+    .social-icons a {
+        color: #ffffff;
+        margin: 0 10px;
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+    .social-icons a:hover {
+        color: #999999;
+    }
+    /* Media Queries */
+    @media (max-width: 768px) {
+        main {
+            flex-direction: column;
+        }
+        .step-navigation button {
+            margin: 10px 0;
+        }
+        .instruction-step::before {
+            left: -35px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <h1>Budget Friendly Recipe Finder</h1>
+</header>
+
+<!-- Container -->
+<div class="container">
+
+    <!-- Recipe Title -->
+    <div class="recipe-title">
+        <h2>Dosa Recipe</h2>
+        <p>Crispy, golden South Indian crepes made from fermented rice and lentil batter</p>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+       
+        <!-- Left Column -->
+        <div class="left-column">
+
+            <!-- Image Gallery -->
+            <div class="image-gallery">
+                <img src="https://i.guim.co.uk/img/media/9940342631a5db38d9e7d5418f07d3cbe3c18175/668_614_6737_6733/master/6737.jpg?width=620&dpr=2&s=none&crop=none" alt="Crispy golden dosa served with chutney and sambar">
+                <img src="https://i.pinimg.com/736x/d1/6d/2d/d16d2d333fa52a4cd01ab67636fb7a1b.jpg" alt="Dosa batter being spread on a hot griddle">
+            </div>
+
+            <!-- Occasion Icons -->
+            <div class="occasions">
+                <div class="occasion-item">
+                    <div class="occasion-icon">🌅</div>
+                    <div>Breakfast</div>
+                </div>
+                <div class="occasion-item">
+                    <div class="occasion-icon">🍽️</div>
+                    <div>Dinner</div>
+                </div>
+                <div class="occasion-item">
+                    <div class="occasion-icon">👪</div>
+                    <div>Family Meal</div>
+                </div>
+                <div class="occasion-item">
+                    <div class="occasion-icon">🌿</div>
+                    <div>Vegetarian</div>
+                </div>
+            </div>
+
+            <!-- Nutritional Info -->
+            <div class="nutrition">
+                <h3>Nutritional Information (Per Dosa)</h3>
+                <ul>
+                    <li><strong>Calories:</strong> 120 kcal</li>
+                    <li><strong>Protein:</strong> 3g</li>
+                    <li><strong>Carbs:</strong> 22g</li>
+                    <li><strong>Fat:</strong> 2g</li>
+                    <li><strong>Fiber:</strong> 2g</li>
+                    <li><strong>Iron:</strong> 10% DV</li>
+                    <li><strong>Calcium:</strong> 2% DV</li>
+                </ul>
+            </div>
+
+            <!-- Why You'll Love This Dish -->
+            <div class="why-love">
+                <h3>Why You'll Love Dosa</h3>
+                <ul>
+                    <li>🌟 <strong>Versatile:</strong> Can be made plain or stuffed with potatoes</li>
+                    <li>🌿 <strong>Healthy:</strong> Fermented food good for gut health</li>
+                    <li>💰 <strong>Budget-Friendly:</strong> Costs only ₹15-₹20 per serving</li>
+                    <li>⏱️ <strong>Quick:</strong> Cooks in just 2-3 minutes per dosa</li>
+                    <li>✅ <strong>Gluten-Free:</strong> Naturally gluten-free</li>
+                </ul>
+            </div>
+
+            <!-- Variations -->
+            <div class="variations">
+                <h4>Popular Dosa Variations</h4>
+                <ul>
+                    <li><strong>Masala Dosa:</strong> Stuffed with spiced potato filling</li>
+                    <li><strong>Rava Dosa:</strong> Made with semolina for crisp texture</li>
+                    <li><strong>Set Dosa:</strong> Thick, soft and served in sets of 3</li>
+                    <li><strong>Neer Dosa:</strong> Thin, delicate dosa from coastal Karnataka</li>
+                    <li><strong>Cheese Dosa:</strong> With melted cheese filling</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <div class="interactive-section">
+
+                <!-- Add to Favorites Button -->
+                <button class="favorites-btn" id="favorites-btn"><i class="fas fa-heart"></i> Add to Favorites</button>
+
+                <!-- Serving Size Adjuster -->
+                <div class="serving-size">
+                    <label for="servings">Servings:</label>
+                    <input type="number" id="servings" value="4" min="1" max="12">
+                </div>
+
+                <!-- Ingredients -->
+                <div class="ingredients">
+                    <h3>Ingredients</h3>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient1">
+                            <label for="ingredient1">2 cups rice (regular or parboiled)</label>
+                        </div>
+                        <span class="ingredient-cost">₹30</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient2">
+                            <label for="ingredient2">1/2 cup urad dal (black gram)</label>
+                        </div>
+                        <span class="ingredient-cost">₹15</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient3">
+                            <label for="ingredient3">1/4 tsp fenugreek seeds</label>
+                        </div>
+                        <span class="ingredient-cost">₹2</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient4">
+                            <label for="ingredient4">1 tsp salt</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient5">
+                            <label for="ingredient5">Water (as needed)</label>
+                        </div>
+                        <span class="ingredient-cost">₹0</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient6">
+                            <label for="ingredient6">Oil or ghee for cooking</label>
+                        </div>
+                        <span class="ingredient-cost">₹5</span>
+                    </div>
+                    <div class="total-cost">Total: ₹53</div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions">
+                    <h3>Instructions</h3>
+                    <div class="instruction-step active" data-step="1">
+                        <strong>Soaking:</strong> Wash rice, urad dal and fenugreek seeds separately. Soak rice for 4-6 hours and urad dal with fenugreek for 2 hours.
+                    </div>
+                    <div class="instruction-step" data-step="2">
+                        <strong>Grinding:</strong> Drain water and grind urad dal to smooth fluffy batter. Grind rice separately to smooth paste. Mix both batters together with salt.
+                    </div>
+                    <div class="instruction-step" data-step="3">
+                        <strong>Fermentation:</strong> Cover and let batter ferment in warm place for 8-12 hours or overnight. Batter will rise and become slightly sour.
+                    </div>
+                    <div class="instruction-step" data-step="4">
+                        <strong>Cooking:</strong> Heat griddle/tawa. Pour ladle of batter and spread in circular motion to make thin crepe. Drizzle oil/ghee. Cook until golden and crisp.
+                    </div>
+                    <div class="instruction-step" data-step="5">
+                        <strong>Serving:</strong> Fold dosa and serve hot with coconut chutney and sambar. For masala dosa, add potato filling before folding.
+                    </div>
+
+                    <!-- Step Navigation -->
+                    <div class="step-navigation">
+                        <button id="prev-step" disabled>Previous</button>
+                        <button id="next-step">Next</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Budget Friendly Recipe Finder</p>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+    // Toggle favorites
+    const favoritesBtn = document.getElementById('favorites-btn');
+    favoritesBtn.addEventListener('click', () => {
+        favoritesBtn.classList.toggle('active');
+        favoritesBtn.textContent = favoritesBtn.classList.contains('active') ? 'Added to Favorites' : 'Add to Favorites';
+    });
+
+    // Handle serving size change
+    const servingsInput = document.getElementById('servings');
+    servingsInput.addEventListener('input', (e) => {
+        const servings = e.target.value;
+        const cost = Math.round(servings * 13.25);  // base cost for 4 servings is ₹53 (₹13.25 per serving)
+        document.querySelector('.total-cost').textContent = `Total: ₹${cost}`;
+    });
+
+    // Step navigation functionality
+    const steps = document.querySelectorAll('.instruction-step');
+    const prevBtn = document.getElementById('prev-step');
+    const nextBtn = document.getElementById('next-step');
+    let currentStep = 0;
+
+    prevBtn.disabled = currentStep === 0;
+    nextBtn.disabled = currentStep === steps.length - 1;
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+            steps[currentStep].classList.remove('active');
+            currentStep++;
+            steps[currentStep].classList.add('active');
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === steps.length - 1;
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            steps[currentStep].classList.remove('active');
+            currentStep--;
+            steps[currentStep].classList.add('active');
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = currentStep === steps.length - 1;
+        }
+    });
+    </script>
+</body>
+</html>

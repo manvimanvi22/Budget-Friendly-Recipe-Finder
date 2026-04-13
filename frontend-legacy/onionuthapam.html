@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onion Uthapam Recipe | Budget Friendly Recipe Finder</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+    /* Basic Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        line-height: 1.6;
+    }
+    /* Header */
+    header {
+        background: #000000;
+        color: #ffffff;
+        padding: 20px 0;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    /* Container */
+    .container {
+        width: 85%;
+        margin: 0 auto;
+        padding: 20px 0;
+    }
+    /* Recipe Title */
+    .recipe-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .recipe-title h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .recipe-title p {
+        font-size: 1.2rem;
+        color: #333333;
+    }
+    /* Main Content */
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: space-between;
+    }
+    /* Left Column */
+    .left-column {
+        flex: 1;
+        min-width: 300px;
+    }
+    /* Right Column */
+    .right-column {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+    /* Image Gallery */
+    .image-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .image-gallery img {
+        width: 100%;
+        border-radius: 15px;
+        object-fit: cover;
+        height: auto;
+        max-height: 400px;
+        transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .image-gallery img:hover {
+        transform: scale(1.05);
+        filter: brightness(0.9);
+    }
+    /* Interactive Elements */
+    .interactive-section {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #dddddd;
+    }
+    /* Serving Size Adjuster */
+    .serving-size {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .serving-size label {
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+    .serving-size input {
+        width: 60px;
+        padding: 5px;
+        font-size: 1rem;
+        text-align: center;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+    /* Add to Favorites Button */
+    .favorites-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: auto;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .favorites-btn.active {
+        background: #ff0000;
+    }
+    /* Ingredient Checklist */
+    .ingredients {
+        margin-bottom: 30px;
+    }
+    .ingredients h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .ingredient-details {
+        display: flex;
+        align-items: center;
+    }
+    .ingredient-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
+    .ingredient-item label {
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .ingredient-cost {
+        font-size: 1.1rem;
+        color: #555555;
+    }
+    /* Total Cost */
+    .total-cost {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 10px;
+        color: #000000;
+    }
+    /* Instructions */
+    .instructions {
+        margin-top: 30px;
+    }
+    .instructions h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .instruction-step {
+        display: none;
+        background: #f0f0f0;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        font-size: 1.1rem;
+        min-height: 150px;
+    }
+    .instruction-step.active {
+        display: block;
+    }
+    .instruction-step::before {
+        content: attr(data-step);
+        position: absolute;
+        left: -40px;
+        top: 20px;
+        background: #000000;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+    /* Step Navigation */
+    .step-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .step-navigation button {
+        background: #000000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+    }
+    .step-navigation button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+    /* Nutritional Info */
+    .nutrition {
+        margin-top: 30px;
+    }
+    .nutrition h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .nutrition ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .nutrition li {
+        background: #f0f0f0;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 1rem;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+    /* Why You'll Love This Dish */
+    .why-love {
+        margin-top: 30px;
+    }
+    .why-love h3 {
+        font-size: 1.8rem;
+        color: #000000;
+        margin-bottom: 15px;
+    }
+    .why-love ul {
+        list-style-type: none;
+    }
+    .why-love li {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        padding-left: 30px;
+        position: relative;
+    }
+    .why-love li:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    /* Variations */
+    .variations {
+        margin-top: 30px;
+        background: #ffe0b2;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #ff9800;
+    }
+    .variations h4 {
+        font-size: 1.3rem;
+        color: #000000;
+        margin-bottom: 10px;
+    }
+    .variations ul {
+        margin-left: 20px;
+    }
+    /* Occasion Icons */
+    .occasions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    .occasion-item {
+        text-align: center;
+        margin: 10px;
+        flex: 1;
+        min-width: 120px;
+    }
+    .occasion-icon {
+        font-size: 2rem;
+        margin-bottom: 5px;
+    }
+    /* Footer */
+    footer {
+        background-color: #000000;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 1.1rem;
+        margin-top: 50px;
+    }
+    footer p {
+        margin-bottom: 10px;
+    }
+    .social-icons a {
+        color: #ffffff;
+        margin: 0 10px;
+        font-size: 1.5rem;
+        text-decoration: none;
+    }
+    .social-icons a:hover {
+        color: #999999;
+    }
+    /* Media Queries */
+    @media (max-width: 768px) {
+        main {
+            flex-direction: column;
+        }
+        .step-navigation button {
+            margin: 10px 0;
+        }
+        .instruction-step::before {
+            left: -35px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Budget Friendly Recipe Finder</h1>
+</header>
+
+<div class="container">
+
+    <div class="recipe-title">
+        <h2>Savory Onion Uthapam Recipe</h2>
+        <p>A delicious and quick South Indian pancake topped with onions</p>
+    </div>
+
+    <main>
+
+        <div class="left-column">
+
+            <div class="image-gallery">
+               
+                <img src="https://i.pinimg.com/736x/35/78/40/3578405f896b418c186312e11d9787a2.jpg" alt="Onion Uthapam with Sambar">
+            </div>
+
+            <div class="occasions">
+                <div class="occasion-item">
+                    <div class="occasion-icon">🥞</div>
+                    <div>Breakfast</div>
+                </div>
+                <div class="occasion-item">
+                    <div class="occasion-icon">🌱</div>
+                    <div>Vegetarian</div>
+                </div>
+                <div class="occasion-item">
+                    <div class="occasion-icon">⏱️</div>
+                    <div>Quick</div>
+                </div>
+                <div class="occasion-item">
+                    <div class="occasion-icon">👨‍🍳</div>
+                    <div>Easy</div>
+                </div>
+            </div>
+
+            <div class="nutrition">
+                <h3>Nutritional Information (Per Uthapam - Estimated)</h3>
+                <ul>
+                    <li><strong>Calories:</strong> ~180 kcal</li>
+                    <li><strong>Protein:</strong> ~6g</li>
+                    <li><strong>Carbs:</strong> ~30g</li>
+                    <li><strong>Fat:</strong> ~4g</li>
+                    <li><strong>Fiber:</strong> ~3g</li>
+                    <li><strong>Iron:</strong> ~6% DV</li>
+                    <li><strong>Vitamin C:</strong> ~8% DV</li>
+                </ul>
+            </div>
+
+            <div class="why-love">
+                <h3>Why You'll Love Onion Uthapam</h3>
+                <ul>
+                    <li>😋 <strong>Savory and Flavorful:</strong> The onions add a wonderful taste and texture.</li>
+                    <li>⏱️ <strong>Quick to Make:</strong> Once the batter is ready, it cooks in minutes.</li>
+                    <li>🌱 <strong>Vegetarian Delight:</strong> A satisfying and nutritious vegetarian option.</li>
+                    <li>💰 <strong>Budget-Friendly:</strong> Made with simple and inexpensive ingredients.</li>
+                    <li>🍎 <strong>Customizable:</strong> You can add other vegetables like tomatoes, carrots, and bell peppers.</li>
+                    <li>🇮🇳 <strong>Authentic South Indian Taste:</strong> A popular dish enjoyed across South India.</li>
+                </ul>
+            </div>
+
+            <div class="variations">
+                <h4>Popular Uthapam Variations</h4>
+                <ul>
+                    <li><strong>Mixed Vegetable Uthapam:</strong> Topped with a variety of chopped vegetables.</li>
+                    <li><strong>Tomato Uthapam:</strong> Features juicy and tangy tomatoes.</li>
+                    <li><strong>Cheese Uthapam:</strong> Sprinkled with grated cheese while cooking.</li>
+                    <li><strong>Chili Onion Uthapam:</strong> Includes chopped green chilies for a spicy kick.</li>
+                    <li><strong>Podima Uthapam:</strong> Topped with idli podi (lentil and spice powder).</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="right-column">
+            <div class="interactive-section">
+
+                <button class="favorites-btn" id="favorites-btn"><i class="fas fa-heart"></i> Add to Favorites</button>
+
+                <div class="serving-size">
+                    <label for="servings">Servings:</label>
+                    <input type="number" id="servings" value="4" min="1" max="8">
+                </div>
+
+                <div class="ingredients">
+                    <h3>Ingredients</h3>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient1">
+                            <label for="ingredient1">2 cups dosa batter (fermented rice and lentil batter)</label>
+                        </div>
+                        <span class="ingredient-cost">₹15</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient2">
+                            <label for="ingredient2">1 large onion, finely chopped</label>
+                        </div>
+                        <span class="ingredient-cost">₹5</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient3">
+                            <label for="ingredient3">2-3 tablespoons finely chopped coriander leaves</label>
+                        </div>
+                        <span class="ingredient-cost">₹2</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <div class="ingredient-details">
+                            <input type="checkbox" id="ingredient4">
+                            <label for="ingredient4">1-2 green chilies, finely chopped (optional)</label>
+                        </div>
+                        <span class="ingredient-cost">₹1</span>
+                    </div>
+                    <div class="ingredient-item"><div class="ingredient-details">
+                        <input type="checkbox" id="ingredient5">
+                        <label for="ingredient5">Salt to taste</label>
+                    </div>
+                    <span class="ingredient-cost">₹1</span>
+                </div>
+                <div class="ingredient-item">
+                    <div class="ingredient-details">
+                        <input type="checkbox" id="ingredient6">
+                        <label for="ingredient6">Oil, for cooking</label>
+                    </div>
+                    <span class="ingredient-cost">₹5</span>
+                </div>
+                <div class="total-cost">Total: ₹29</div>
+            </div>
+
+            <div class="instructions">
+                <h3>Instructions</h3>
+                <div class="instruction-step active" data-step="1">
+                    <strong>Prepare Ingredients:</strong> Finely chop the onion, coriander leaves, and green chilies (if using). Keep them ready.
+                </div>
+                <div class="instruction-step" data-step="2">
+                    <strong>Mix Batter and Toppings:</strong> In a bowl, gently mix the chopped onions, coriander leaves, and green chilies into the dosa batter. Add salt to taste and stir well.
+                </div>
+                <div class="instruction-step" data-step="3">
+                    <strong>Heat Griddle:</strong> Heat a flat griddle or non-stick pan over medium heat. Ensure it's hot before pouring the batter.
+                </div>
+                <div class="instruction-step" data-step="4">
+                    <strong>Pour Batter:</strong> Pour a ladleful of the batter onto the hot griddle. Gently spread it in a circular motion to form a thick pancake (thicker than a dosa).
+                </div>
+                <div class="instruction-step" data-step="5">
+                    <strong>Cook One Side:</strong> Drizzle some oil around the edges and on top of the uthapam. Cook on medium heat until the bottom turns light golden brown (about 2-3 minutes).
+                </div>
+                <div class="instruction-step" data-step="6">
+                    <strong>Flip and Cook Other Side:</strong> Gently flip the uthapam using a spatula. Drizzle some more oil around the edges. Cook the other side until it also turns golden brown and the onions are cooked through (about 2-3 minutes). Press gently with the spatula to ensure even cooking.
+                </div>
+                <div class="instruction-step" data-step="7">
+                    <strong>Serve Hot:</strong> Once both sides are cooked and golden brown, remove the onion uthapam from the griddle. Serve hot with sambar, coconut chutney, or tomato chutney.
+                </div>
+
+                <div class="step-navigation">
+                    <button id="prev-step" disabled>Previous</button>
+                    <button id="next-step">Next</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Budget Friendly Recipe Finder</p>
+    <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+    </div>
+</footer>
+
+<script>
+const favoritesBtn = document.getElementById('favorites-btn');
+favoritesBtn.addEventListener('click', () => {
+    favoritesBtn.classList.toggle('active');
+    favoritesBtn.textContent = favoritesBtn.classList.contains('active') ? 'Added to Favorites' : 'Add to Favorites';
+});
+
+const servingsInput = document.getElementById('servings');
+servingsInput.addEventListener('input', (e) => {
+    const servings = parseInt(e.target.value);
+    const baseCost = 29; // Cost for 4 uthapams (assuming each serving is 1 uthapam)
+    const costPerServing = baseCost / 4;
+    const totalCost = Math.round(servings * costPerServing);
+    document.querySelector('.total-cost').textContent = `Total: ₹${totalCost}`;
+});
+
+const steps = document.querySelectorAll('.instruction-step');
+const prevBtn = document.getElementById('prev-step');
+const nextBtn = document.getElementById('next-step');
+let currentStep = 0;
+
+prevBtn.disabled = currentStep === 0;
+nextBtn.disabled = currentStep === steps.length - 1;
+
+nextBtn.addEventListener('click', () => {
+    if (currentStep < steps.length - 1) {
+        steps[currentStep].classList.remove('active');
+        currentStep++;
+        steps[currentStep].classList.add('active');
+        prevBtn.disabled = currentStep === 0;
+        nextBtn.disabled = currentStep === steps.length - 1;
+    }
+});
+
+prevBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+        steps[currentStep].classList.remove('active');
+        currentStep--;
+        steps[currentStep].classList.add('active');
+        prevBtn.disabled = currentStep === 0;
+        nextBtn.disabled = currentStep === steps.length - 1;
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Budget Friendly Recipe Finder</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://www.example.com/path-to-your-image.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .signup-box {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      backdrop-filter: blur(10px);
+    }
+
+    .signup-box h2 {
+      margin-bottom: 25px;
+      font-size: 28px;
+      color: #333;
+    }
+
+    .signup-box input[type="text"],
+    .signup-box input[type="password"],
+    .signup-box input[type="email"] {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      background-color: #f7f7f7;
+      color: #333;
+    }
+
+    .signup-box input[type="text"]::placeholder,
+    .signup-box input[type="password"]::placeholder,
+    .signup-box input[type="email"]::placeholder {
+      color: #999;
+    }
+
+    .signup-box input[type="submit"] {
+      background-color: #696969;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .signup-box input[type="submit"]:hover {
+      background-color: #505050;
+    }
+
+    .home-link,
+    .login-link p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+      transition: color 0.3s ease;
+    }
+
+    .home-link:hover,
+    .login-link a:hover {
+      color: #333;
+      text-decoration: underline;
+    }
+
+    .login-link {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    .login-link a {
+      color: #696969;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      .signup-box {
+        width: 90%;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="signup-box">
+      <h2>Sign Up</h2>
+      <form id="signup-form">
+        <input type="text" id="username" name="username" placeholder="Username" required />
+        <input type="email" id="email" name="email" placeholder="Email" required />
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <input type="submit" value="Sign Up" />
+      </form>
+      <div class="home-link">
+        <p><a href="index.html">Home</a></p>
+      </div>
+      <div class="login-link">
+        <p>Already have an account? <a href="login.html">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      fetch('https://budgetrecipe-backend.onrender.com/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert('Signup successful! Please log in.');
+            window.location.href = 'login.html';
+          } else {
+            alert('Error: ' + (data.message || 'Signup failed.'));
+          }
+        })
+        .catch(err => {
+          console.error('Signup error:', err);
+          alert('An error occurred during signup.');
+        });
+    });
+  </script>
+</body>
+</html>

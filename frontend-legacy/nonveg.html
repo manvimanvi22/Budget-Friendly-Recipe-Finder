@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Veg Recipes</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex; /* Flexbox layout */
+            flex-wrap: wrap; /* Wrap to the next row when needed */
+            gap: 20px;
+            justify-content: center; /* Center-align items */
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px); /* Flexible layout with 4 items per row */
+            max-width: 250px; /* Limit max width for larger screens */
+            min-width: 200px; /* Minimum size to maintain responsiveness */
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px; /* Fixed width */
+            height: 250px; /* Fixed height */
+            object-fit: cover; /* Ensures the image is cropped proportionally */
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Non-Veg Recipes</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+       
+        <div class="slider-container">
+            <span>40</span>
+            <input type="range" id="priceSlider" min="40" max="1000" value="40" step="10">
+            <span>1000</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">40</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById("priceSlider");
+        const recipeList = document.getElementById("recipeList");
+        const priceDisplay = document.getElementById("priceDisplay");
+    
+        const recipes = [
+            { price: 80, name: "Butter Chicken", image: "https://i.pinimg.com/736x/93/e9/79/93e97987768f9240c5ffda2475c0ce28.jpg", link: "butterchicken.html", description: "Tender chicken in a rich and creamy tomato-based gravy." },
+            { price: 175, name: "Chicken Biryani", image: "https://i.pinimg.com/736x/6a/cc/f3/6accf3cefbe7f9779d151e3696018990.jpg", link: "chickenbiryani.html", description: "A flavorful rice dish with spiced chicken and aromatic herbs." },
+            { price: 50, name: "Tandoori Chicken", image: "https://i.pinimg.com/736x/3e/34/32/3e34327f15bffe23ad9552cccf9438b0.jpg", link: "tandoorichicken.html", description: "Juicy chicken marinated in yogurt and spices, grilled to perfection." },
+            { price: 95, name: "Mutton Rogan Josh", image: "https://i.pinimg.com/736x/70/f1/51/70f151786fdd6ef1d8adcbef9756a075.jpg", link: "muttonrogangosh.html", description: "A spicy and flavorful mutton curry with Kashmiri spices." },
+            { price: 58, name: "Fish Curry", image: "https://i.pinimg.com/736x/3d/d9/bd/3dd9bd8e7749bfa578ea799f115b3480.jpg", link: "fishcurry.html", description: "A tangy and spicy curry made with fresh fish." },
+            { price: 60, name: "Chicken Tikka Masala", image: "https://i.pinimg.com/736x/7a/10/c6/7a10c60677bb0e4bc8f14c37e7e58186.jpg", link: "chickentikkamasala.html", description: "Grilled chicken chunks in a rich and creamy spiced gravy." },
+            { price: 98, name: "Lamb Korma", image: "https://i.pinimg.com/736x/72/e5/f8/72e5f82102075674be8be2ebd2f7094d.jpg", link: "lambkorma.html", description: "Tender lamb cooked in a smooth, mildly spiced gravy." },
+            { price: 78, name: "Prawn Masala", image: "https://i.pinimg.com/736x/32/cd/5a/32cd5a30754392e703f3eafbc910b46b.jpg", link: "prawnmasala.html", description: "Succulent prawns in a tangy, spicy curry." },
+            { price: 77, name: "Mutton Seekh Kebabs", image: "https://i.pinimg.com/736x/44/a5/8b/44a58bc663c9b9079f1cae05a9833ae5.jpg", link: "muttonseekhkebab.html", description: "Spiced minced mutton skewers grilled to perfection." },
+            { price: 63, name: "Chicken Shawarma", image: "https://i.pinimg.com/736x/07/5a/f7/075af76c078097a81452e1e352be8da8.jpg", link: "chickenshawarma.html", description: "Middle Eastern-style grilled chicken served with pita bread." },
+            { price: 77, name: "Chicken Korma", image: "https://i.pinimg.com/736x/66/54/9b/66549bb583cf02c70af73a49976c5c6c.jpg", link: "chickenkorma.html", description: "Creamy, rich curry with tender chicken pieces." },
+            { price: 85, name: "Lamb Kofta", image: "https://i.pinimg.com/736x/52/67/1d/52671dd12971794b9c56693d5a54c376.jpg", link: "lambkofta.html", description: "Spiced lamb meatballs in a rich curry." },
+            { price: 71, name: "Grilled Fish", image: "https://i.pinimg.com/736x/65/f5/2b/65f52bd1bd0f90a60fe388d9893802a8.jpg", link: "grilledfish.html", description: "Marinated fish grilled to perfection with spices." },
+            { price: 54, name: "Spicy Chicken Wings", image: "https://i.pinimg.com/736x/be/82/99/be82996e1e94fe1062223cd6cc2873a8.jpg", link: "chickenwings.html", description: "Crispy and spicy wings, perfect for snacks." },
+            { price: 94, name: "Chicken Malai Tikka", image: "https://i.pinimg.com/736x/e9/2b/dd/e92bddb0c3e767add13a1cf241804e60.jpg", link: "chickenmalaitikka.html", description: "Tender chicken pieces marinated in cream and spices." },
+            { price: 81, name: "Fish Fry", image: "https://i.pinimg.com/736x/6c/e6/e9/6ce6e973879a1dbf87da7cb9c13c920c.jpg", link: "fishfry.html", description: "Crispy fried fish with a spicy coating." },
+            { price: 73, name: "Chicken Burger", image: "https://i.pinimg.com/736x/f5/84/22/f584223b4cb07cda004c66f3874d3dbc.jpg", link: "chickenburger.html", description: "Chicken patty with vegetables and sauces in buns." },
+            { price: 156, name: "Mutton Pulao", image: "https://i.pinimg.com/736x/9d/8d/aa/9d8daab93d92ad9f3aabe5988aca4b0b.jpg", link: "muttonpulav.html", description: "Aromatic rice dish cooked with tender mutton and spices." },
+            { price: 33, name: "Egg Curry", image: "https://i.pinimg.com/736x/98/8c/14/988c14d330598ec327e16424a37c36d3.jpg", link: "eggcurry.html", description: "Spiced curry with hard-boiled eggs." },
+        ];
+
+    
+        function rendernonveg(nonvegArray) {
+        recipeList.innerHTML = "";
+        nonvegArray.forEach(nonveg => {
+            const item = document.createElement("div");
+            item.classList.add("recipe-item");
+            var filteredRecepies = recipes.filter(ritem => {
+
+                if(ritem.name.toLowerCase() === nonveg.name.toLowerCase()){
+                    return true;
+                }
+                return false;
+                
+            })
+            
+            item.innerHTML = `
+                <a href="${nonveg.link || "#"}" target="_blank">
+                    <img src="${nonveg.image}" alt="${nonveg.name}" style="width:200px;height:150px;border-radius:10px;"><br>
+                </a>
+                <h3>${nonveg.name}</h3>
+                <p>${nonveg.description || ""}</p>
+                <p>₹${nonveg.price} ${nonveg.favourites ? `| ❤️ ${nonveg.favourites}` : ""}</p>
+            `;
+            if(filteredRecepies.length >0){
+                 recipeList.appendChild(item);
+            }
+           
+        });
+    }
+
+    function updateFromBackend(budget) {
+        fetch(`https://budgetrecipe-backend.onrender.com/recipes?budget=${budget}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    rendernonveg(data);
+                } else {
+                    rendernonveg([]);
+                    recipeList.innerHTML = "<p>No dinner recipes found in this budget range.</p>";
+                }
+            })
+            .catch(err => {
+                console.warn("Backend not reachable. Falling back to local data.", err);
+                updateFromLocal(budget);
+            });
+    }
+
+    function updateFromLocal(budget) {
+        const filtered = recipes.filter(d => d.price <= budget);
+        rendernonveg(filtered);
+    }
+
+    slider.addEventListener("input", () => {
+        const budget = parseInt(slider.value);
+        priceDisplay.textContent = budget;
+        updateFromBackend(budget);
+    });
+
+    // Initialize
+    const initialBudget = parseInt(slider.value);
+    priceDisplay.textContent = initialBudget;
+    updateFromBackend(initialBudget);
+</script>
+</body>
+</html>

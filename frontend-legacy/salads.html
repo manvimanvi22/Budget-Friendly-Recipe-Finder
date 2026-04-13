@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salads</title>
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+        .scroll-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        .price-range {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #555;
+        }
+        .slider-container {
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input[type="range"] {
+            width: 80%;
+            appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid black;
+            cursor: pointer;
+        }
+        .price-value {
+            font-size: 20px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .recipe-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+        }
+        .recipe-item {
+            flex: 1 1 calc(25% - 20px);
+            max-width: 250px;
+            min-width: 200px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-item img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .recipe-item p {
+            margin: 10px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Salads</h1>
+
+    <div class="scroll-container">
+        <div class="price-range">Price Range:</div>
+
+        <div class="slider-container">
+            <span>25</span>
+            <input type="range" id="priceSlider" min="25" max="1000" value="25" step="15">
+            <span>1000</span>
+        </div>
+
+        <div class="price-value">
+            Selected Price: <span id="priceDisplay">25</span> Rupees
+        </div>
+
+        <div class="recipe-list" id="recipeList">
+            <!-- Recipes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const priceSlider = document.getElementById("priceSlider");
+        const priceDisplay = document.getElementById("priceDisplay");
+        const recipeList = document.getElementById("recipeList");
+
+        const recipes = [
+            { price: 120, name: "Kachumber Salad", image: "https://sinfullyspicy.com/wp-content/uploads/2023/07/1.jpg", link: "https://example.com/caesar", description: "Fresh cucumber, tomato, onion, and spices." },
+            { price: 300, name: "Panner Salad", image: "https://sinfullyspicy.com/wp-content/uploads/2022/05/1-2.jpg", link: "https://example.com/greek", description: "Fresh paneer with veggies and dressing." },
+            { price: 60, name: "Fruit Salad", image: "https://i.pinimg.com/736x/07/21/97/0721974009ef6a0a1d1dec301912caa1.jpg", link: "https://kaleforniakravings.com/winter-fruit-salad-with-orange-poppy-seed-dressing/", description: "A refreshing mix of seasonal fruits with a drizzle of honey." },
+            { price: 545, name: "Greek Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2022/08/greek-salad-1-scaled.jpg", link: "https://example.com/quinoa", description: "Fresh veggies, feta,olives,dressing." },
+            { price: 25, name: "Caprese Salad", image: "https://i.pinimg.com/736x/22/7a/02/227a02427da41feb52bb7acde71e2bb1.jpg", link: "https://example.com/caprese", description: "Fresh mozzarella, tomatoes, and basil with balsamic glaze." },
+            { price: 140, name: "Tabbouleh", image: "https://i.pinimg.com/736x/f0/f6/4c/f0f64c2f88eef925c30c761aadaf9846.jpg", link: "https://example.com/tabbouleh", description: "Parsley, mint, tomatoes, and bulgur wheat with lemon dressing." },
+            { price: 320, name: "Roasted Chickpea Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2017/03/roasted-chickpea-1.jpg", link: "https://example.com/chickpea", description: "Roasted Chickpea and Kale Salad with delicious creamy tahini dressing " },
+            { price: 500, name: "Avocado Salad", image: "https://i.pinimg.com/736x/03/23/45/0323456c71f372540f1ea6a51cedf72d.jpg", link: "https://www.recipetineats.com/favourite-avocado-salad/", description: "Avocados, tomatoes, and cilantro tossed in a light dressing." },
+            { price: 780, name: "Cabbage Salad", image: "https://i.pinimg.com/736x/dc/8b/81/dc8b81cf7b06945cb3f28fda4fb2e9ca.jpg", link: "https://www.manilaspoon.com/easy-asian-salad/", description: "crunchy and flavorful easy Asian salad recipe with sesame dressing! " },
+            { price: 680, name: "Coleslaw", image: "https://i.pinimg.com/736x/65/5f/a2/655fa25bf5e6d5448c9e009b94b4a5e7.jpg", link: "https://example.com/coleslaw", description: "Creamy coleslaw with shredded cabbage and carrots." },
+            { price: 125, name: "Potato Salad", image: "https://i.pinimg.com/736x/fb/6e/af/fb6eaf394c05e81ed7817f25301d1faf.jpg", link: "https://example.com/potato", description: "Potatoes mixed with mayo, mustard, and pickles." },
+            { price: 900, name: "Egg White and Avocado Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2016/11/2-1.jpg", link: "https://example.com/bean", description: "easy go-to lunches because it’s healthy, full of flavor and has ZERO added mayo!" },
+            { price: 340, name: "Strawberry Spinach Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2019/09/strawberry-salad-3.jpg", link: "https://www.eatyourselfskinny.com/strawberry-spinach-salad-with-poppy-seed-dressing/", description: "Super simple Strawberry Spinach Salad with Poppy Seed Dressing" },
+            { price: 145, name: "Black Bean and Corn Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2021/08/black-bean-salad-9-scaled.jpg", link: "https://example.com/tuna", description: " crisp veggies, delicious spices and fresh cilantro" },
+            { price: 150, name: "Beetroot Salad", image: "https://i.pinimg.com/736x/73/a6/9e/73a69ee5dbcc0db029df4cb487d152d2.jpg", link: "https://example.com/beetroot", description: "Roasted beetroot with feta cheese and walnuts." },
+            { price: 250, name: "Lentil Salad", image: "https://i.pinimg.com/736x/32/a8/35/32a8357b1e84a1b5716da7828e083727.jpg", link: "https://example.com/lentil", description: "Cooked lentils with cucumber, tomatoes, and a lemon vinaigrette." },
+            { price: 850, name: "Roasted Sweet Potato Chickpea Salad", image: "https://i.pinimg.com/736x/82/de/f5/82def5235655e155d7419b68e9b4ffb6.jpg", link: "https://kaynutrition.com/sweet-potato-and-chickpea-salad/", description: "rich and creamy tahini dressing and sprinkled with feta cheese, this roasted sweet potato and chickpea salad i" },
+            { price: 330, name: "Mango Custard", image: "https://sinfullyspicy.com/wp-content/uploads/2014/07/2.jpg", link: "https://example.com/mango", description: "Fresh mango, bell peppers, and cilantro with a lime dressing." },
+            { price: 980, name: "Watermelon, Cucumber and Feta Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2022/07/watermelon-salad-5-scaled.jpg", link: "https://www.eatyourselfskinny.com/watermelon-cucumber-and-feta-salad/", description: "Cucumber and Feta Salad is bright, refreshing and the perfect summer side dish! " },
+            { price: 110, name: "Sweet Cucumber Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2023/08/cucumber-salad-3-scaled.jpg", link: "https://example.com/cucumber", description: "Sweet Cucumber Salad made with crisp cucumbers, slices of red onion and fresh dill all tossed in a tangy vinaigrette" },
+            { price: 500, name: "Italian Pasta Salad", image: "https://i.pinimg.com/736x/a3/49/c8/a349c8458c52cfc752f0a9331ee052d4.jpg", link: "https://example.com/pasta", description: "Italian Pasta Salad is loaded with juicy tomatoes, cucumbers, fresh mozzarella, spicy salami, pepperoncini, red onion and olives" },
+            { price: 125, name: "Avocado & Corn Salad", image: "https://i.pinimg.com/736x/2b/6e/c5/2b6ec510a94c5ca603a70fe6cec15d5f.jpg", link: "https://example.com/avocado-corn", description: "fresh herbs, jalapeño, toasted pumpkin seeds, and creamy dressing" },
+            { price: 75, name: "Tomato Salad", image: "https://i.pinimg.com/736x/f9/fc/65/f9fc656ffb3e02d53d70c0b1c7544024.jpg", link: "https://example.com/tomato", description: "Fresh tomatoes with olive oil and balsamic vinegar." },
+            { price: 130, name: "Carrot Salad", image: "https://i.pinimg.com/736x/7d/e1/5b/7de15b2fd563c9b53ceb39ed27ce23e6.jpg", link: "https://example.com/carrot", description: "grated carrots and a quick vinaigrette. It’s a healthy salad with a great crunch and a tangy dressing" },
+            { price: 55, name: "Healthy Broccoli Salad", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2022/08/broccoli-salad-8-scaled.jpg", link: "https://example.com/cabbage-apple", description: "fresh broccoli, juicy grapes, red onion, crunchy sunflower seeds and raisins all tossed with a delicious zesty honey dijon dressing made with Greek yogurt instead of mayo!  " },
+            { price: 955, name: "Raspberry Walnut Salad with Chicken", image: "https://www.eatyourselfskinny.com/wp-content/uploads/2023/07/raspberry-salad-1-scaled.jpg", link: "https://example.com/pear-gorgonzola", description: " Chicken made with leafy greens, fresh raspberries, shredded chicken, chopped walnuts, and sliced red onion all tossed with a creamy raspberry vinaigrette! pears and gorgonzola cheese with walnuts." }
+        ]
+
+        function updateRecipes(price) {
+            recipeList.innerHTML = "";
+            const filteredRecipes = recipes.filter(recipe => recipe.price <= price);
+            filteredRecipes.forEach(recipe => {
+                const recipeItem = document.createElement("div");
+                recipeItem.classList.add("recipe-item");
+
+                const recipeLink = document.createElement("a");
+                recipeLink.href = recipe.link;
+                recipeLink.target = "_blank";
+
+                const recipeImage = document.createElement("img");
+                recipeImage.src = recipe.image;
+                recipeImage.alt = recipe.name;
+
+                const recipeText = document.createElement("div");
+                recipeText.textContent = recipe.name;
+
+                const recipeDescription = document.createElement("p");
+                recipeDescription.textContent = recipe.description;
+
+                recipeLink.appendChild(recipeImage);
+                recipeItem.appendChild(recipeLink);
+                recipeItem.appendChild(recipeText);
+                recipeItem.appendChild(recipeDescription);
+
+                recipeList.appendChild(recipeItem);
+            });
+        }
+
+        priceSlider.addEventListener("input", function() {
+            const selectedPrice = priceSlider.value;
+            priceDisplay.textContent = selectedPrice;
+            updateRecipes(selectedPrice);
+        });
+
+        updateRecipes(priceSlider.value);
+    </script>
+</body>
+</html>
