@@ -1,4 +1,4 @@
-# 🍽️ BudgetRecipe — Unified Repo
+# 🍽️ BudgetRecipe 
 
 ## Structure
 - `backend/` — Python Flask API
